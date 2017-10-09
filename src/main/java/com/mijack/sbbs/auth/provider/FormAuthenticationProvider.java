@@ -5,6 +5,7 @@ import com.mijack.sbbs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -30,6 +31,10 @@ public class FormAuthenticationProvider extends AbstractUserDetailsAuthenticatio
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
         Map<String, String> map = (Map<String, String>) authentication.getDetails();
         User user = userService.login(map.get("username"), map.get("email"), map.get("password"));
+        if (user == null) {
+            throw new InternalAuthenticationServiceException(
+                    "UserDetailsService returned null, which is an interface contract violation");
+        }
         return user;
     }
 }
