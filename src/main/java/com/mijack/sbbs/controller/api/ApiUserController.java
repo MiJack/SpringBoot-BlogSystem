@@ -1,6 +1,6 @@
 package com.mijack.sbbs.controller.api;
 
-import com.mijack.sbbs.auth.RestfulApiToken;
+import com.mijack.sbbs.auth.token.RestfulApiToken;
 import com.mijack.sbbs.model.User;
 import com.mijack.sbbs.service.AuthService;
 import com.mijack.sbbs.service.UserService;

@@ -1,6 +1,7 @@
 package com.mijack.sbbs.config;
 
 import com.mijack.sbbs.auth.filter.RestfulApiAuthenticationProcessingFilter;
+import com.mijack.sbbs.auth.handler.LoginAuthenticationSuccessHandler;
 import com.mijack.sbbs.auth.provider.FormAuthenticationProvider;
 import com.mijack.sbbs.auth.provider.RestfulApiAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;

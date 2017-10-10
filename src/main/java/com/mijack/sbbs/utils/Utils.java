@@ -1,5 +1,7 @@
 package com.mijack.sbbs.utils;
 
+import org.springframework.security.core.Authentication;
+
 import java.util.Base64;
 import java.util.regex.Pattern;
 
@@ -24,5 +26,9 @@ public class Utils {
 
     public static String base64Decoder(String src) {
         return new String(Base64.getDecoder().decode(src.getBytes()));
+    }
+
+    public static boolean isAuthenticated(Authentication authentication) {
+        return authentication != null && authentication.isAuthenticated();
     }
 }

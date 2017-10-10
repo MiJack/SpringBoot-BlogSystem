@@ -21,14 +21,9 @@ import org.springframework.web.servlet.ModelAndView;
  * @since 2017/8/17
  */
 @Controller
-public class MainController {
+public class MainController extends BaseController {
     @Autowired
     MainService mainService;
-    public static final int DEFAULT_HOT_BLOG_SIZE = 5;
-    public static final int DEFAULT_HOT_USER_SIZE = 5 * 2;
-    public static final int DEFAULT_HOT_TAG_SIZE = 4 * 3;
-    public static final int DEFAULT_BLOG_SIZE_PRE_PAGE = 10;
-    public static final int DEFAULT_BLOG_PAGE_OFFSET = 5;
 
     @GetMapping({"/", "/index.html"})
     public ModelAndView index(@RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
@@ -69,7 +64,6 @@ public class MainController {
      * @return
      */
     @GetMapping({"login.html"})
-    @PostMapping({"login"})
     public String loginPage(Authentication authentication) {
         return (authentication != null && authentication.isAuthenticated()) ? "redirect:/" : "login";
     }

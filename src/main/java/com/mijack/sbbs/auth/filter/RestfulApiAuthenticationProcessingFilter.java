@@ -1,6 +1,6 @@
 package com.mijack.sbbs.auth.filter;
 
-import com.mijack.sbbs.auth.RestfulApiToken;
+import com.mijack.sbbs.auth.token.RestfulApiToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;

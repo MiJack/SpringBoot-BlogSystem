@@ -1,4 +1,4 @@
-package com.mijack.sbbs.config;
+package com.mijack.sbbs.auth.handler;
 
 import com.mijack.sbbs.model.User;
 import com.mijack.sbbs.service.AuthService;

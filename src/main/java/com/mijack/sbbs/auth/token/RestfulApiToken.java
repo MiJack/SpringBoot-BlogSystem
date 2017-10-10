@@ -1,4 +1,4 @@
-package com.mijack.sbbs.auth;
+package com.mijack.sbbs.auth.token;
 
 import com.mijack.sbbs.model.User;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
