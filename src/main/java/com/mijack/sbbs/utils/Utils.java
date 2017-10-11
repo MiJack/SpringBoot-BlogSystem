@@ -31,4 +31,8 @@ public class Utils {
     public static boolean isAuthenticated(Authentication authentication) {
         return authentication != null && authentication.isAuthenticated();
     }
+
+    public static int length(Object... objects) {
+        return objects == null ? 0 : objects.length;
+    }
 }

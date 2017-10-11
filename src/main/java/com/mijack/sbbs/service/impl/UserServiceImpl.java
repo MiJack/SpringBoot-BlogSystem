@@ -1,7 +1,5 @@
 package com.mijack.sbbs.service.impl;
 
-import com.mijack.sbbs.exceptions.IllegalPasswordException;
-import com.mijack.sbbs.exceptions.UserNotFoundException;
 import com.mijack.sbbs.model.User;
 import com.mijack.sbbs.repository.UserRepository;
 import com.mijack.sbbs.service.UserService;
@@ -22,5 +20,10 @@ public class UserServiceImpl implements UserService {
         }
         return Utils.isEquals(password, user.getPassword()) ?
                 user : null;
+    }
+
+    @Override
+    public User findUser(long userId) {
+        return userRepository.findOne(userId);
     }
 }
