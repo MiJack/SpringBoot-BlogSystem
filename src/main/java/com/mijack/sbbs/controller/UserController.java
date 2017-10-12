@@ -1,5 +1,6 @@
 package com.mijack.sbbs.controller;
 
+import com.mijack.sbbs.controller.base.BaseController;
 import com.mijack.sbbs.model.User;
 import com.mijack.sbbs.service.UserService;
 import com.mijack.sbbs.utils.Utils;

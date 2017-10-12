@@ -1,6 +1,7 @@
 package com.mijack.sbbs.controller;
 
 import com.mijack.sbbs.component.Pagination;
+import com.mijack.sbbs.controller.base.BaseController;
 import com.mijack.sbbs.model.Blog;
 import com.mijack.sbbs.model.User;
 import com.mijack.sbbs.service.BlogService;

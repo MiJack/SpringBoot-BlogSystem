@@ -50,6 +50,7 @@ public class Blog {
             inverseJoinColumns = @JoinColumn(name = "tagId", referencedColumnName = "id"))
     private Set<Tag> tags;
     private int hotValue = 0;
+    private String mongoFileId;
 
     public Blog() {
     }
@@ -185,5 +186,13 @@ public class Blog {
                 ", updateTime=" + updateTime +
                 ", user=" + user +
                 '}';
+    }
+
+    public void setMongoFileId(String mongoFileId) {
+        this.mongoFileId = mongoFileId;
+    }
+
+    public String getMongoFileId() {
+        return mongoFileId;
     }
 }

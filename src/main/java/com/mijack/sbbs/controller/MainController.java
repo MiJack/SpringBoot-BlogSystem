@@ -1,6 +1,7 @@
 package com.mijack.sbbs.controller;
 
 import com.mijack.sbbs.component.Pagination;
+import com.mijack.sbbs.controller.base.BaseController;
 import com.mijack.sbbs.model.Blog;
 import com.mijack.sbbs.model.Tag;
 import com.mijack.sbbs.model.User;
@@ -11,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 

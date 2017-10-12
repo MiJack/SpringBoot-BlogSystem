@@ -1,4 +1,4 @@
-package com.mijack.sbbs.controller;
+package com.mijack.sbbs.controller.base;
 
 /**
  * @author Mr.Yuan

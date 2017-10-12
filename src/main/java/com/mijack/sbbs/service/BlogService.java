@@ -14,4 +14,10 @@ public interface BlogService {
     Page<Blog> listBlog(Pageable pageable);
 
     Page<Blog> listBlog(User user, Pageable pageable);
+
+    boolean deleteBlog(Blog blog);
+
+    Blog findBlog(long blogId);
+
+    void saveBlog(Blog blog);
 }
