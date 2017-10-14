@@ -44,11 +44,31 @@ public class ApiUserController {
     @GetMapping()
     @ResponseBody
     public Response user(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (!Utils.isAuthenticated(authentication)) {
             return Response.ok(null).code(0).msg("接口未授权");
         }
         RestfulApiToken token = (RestfulApiToken) authentication;
         return Response.ok(token.getUser())
                 .msg("登录成功");
+    }
+
+    @PatchMapping()
+    @ResponseBody
+    public Response password(
+            @RequestParam("old-password") String oldPassword,
+            @RequestParam("new-password") String newPassword,
+            Authentication authentication) {
+        if (!Utils.isAuthenticated(authentication)) {
+            return Response.ok(null).code(0).msg("接口未授权");
+        }
+        RestfulApiToken token = (RestfulApiToken) authentication;
+        User user = token.getUser();
+        if (!Utils.isEquals(oldPassword, newPassword)) {
+            return Response.failed("用户原密码错误");
+        }
+        user.setPassword(newPassword);
+        user = userService.saveUser(user);
+        return Response.ok(user)
+                .msg("密码修改成功");
     }
 }
