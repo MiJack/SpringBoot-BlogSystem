@@ -2,17 +2,33 @@
 <html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"></meta>
-    <title>Title</title>
-</head>
+    <meta charset="UTF-8"/>
+    <title>博客系统</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+          crossorigin="anonymous"></link>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+            integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+            integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../../static/css/blog.css" th:href="@{/css/blog.css}">
+    </link></head>
 <body>
+<header th:replace="fragments/nav :: navbar"/>
+
+<!--/*--><!--解析时删除-->
 
 <!-- Fixed navbar -->
 <header data-th-fragment="navbar">
     <script>
         function logout() {
-            $("#logoutForm").submit();
-        };
+            $("#logoutForm").submit()
+        }
 
         $(document).ready(function () {
             $(".blog-nav-item").each(function () {
@@ -40,21 +56,22 @@
                 <div class="navbar-nav">
                     <a class="nav-item nav-link blog-nav-item" data-location="['/','/index.html']"
                        href="/index.html">首页</a>
-                    <a class="nav-item nav-link blog-nav-item" data-location="['/user/blogs.html']"
+                    <a class="nav-item nav-link blog-nav-item" data-location="['/owner/blogs.html']"
                        sec:authorize="hasAnyRole('USER') and !hasAnyRole('ADMIN')"
-                       th:href="@{/user/blogs.html}">我的博客</a>
-                    <a class="nav-item nav-link blog-nav-item" data-location="['/write-blog.html']"
+                       th:href="@{/owner/blogs.html}">我的博客</a>
+                    <a class="nav-item nav-link blog-nav-item" data-location="[]"
                        sec:authorize="hasAnyRole('USER') and !hasAnyRole('ADMIN')"
-                       th:href="@{/write-blog.html}">新建博客</a>
-                    <a class="nav-item nav-link blog-nav-item" data-location="['/search.html']"
-                       th:href="@{/search.html}">搜索</a>
-                    <a class="nav-item nav-link blog-nav-item" data-location="['/manager/users.html']"
+                       th:href="@{/newBlog.html}">新建博客</a>
+                    <a class="nav-item nav-link blog-nav-item" data-location="[]"
+                       sec:authorize="hasAnyRole('USER') and !hasAnyRole('ADMIN')"
+                       th:href="@{/search.html.html}">搜索</a>
+                    <a class="nav-item nav-link blog-nav-item" data-location="[]"
                        sec:authorize="hasAnyRole('ADMIN')"
                        href="/manager/users.html">用户管理</a>
-                    <a class="nav-item nav-link blog-nav-item" data-location="['/manager/blogs.html']"
+                    <a class="nav-item nav-link blog-nav-item" data-location="[]"
                        sec:authorize="hasAnyRole('ADMIN')"
                        href="/manager/blogs.html">博客管理</a>
-                    <a class="nav-item nav-link blog-nav-item" data-location="['/manager/categories.html']"
+                    <a class="nav-item nav-link blog-nav-item" data-location="[]"
                        sec:authorize="hasAnyRole('ADMIN')"
                        href="/manager/categories.html">分类管理</a>
 
@@ -62,13 +79,13 @@
             </div>
             <div class="collapse navbar-collapse justify-content-end" style="margin-right: 200px">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link blog-nav-item" href="/login.html" data-location="['/login.html']"
+                    <a class="nav-item nav-link" href="/login.html" data-location="[]"
                        sec:authorize="isAnonymous()">登录</a>
-                    <a class="nav-item nav-link blog-nav-item" href="/register.html" data-location="['/register.html']"
+                    <a class="nav-item nav-link" href="/register.html" data-location="[]"
                        sec:authorize="isAnonymous()">注册</a>
-                    <a class="nav-item nav-link blog-nav-item" href="/user.html" data-location="['/user.html']"
+                    <a class="nav-item nav-link" href="/owner" data-location="[]"
                        sec:authorize="isAuthenticated()" sec:authentication="name"> 登录用户</a>
-                    <a class="nav-item nav-link blog-nav-item" href="#" data-location="[]"
+                    <a class="nav-item nav-link" href="#" data-location="[]"
                        sec:authorize="isAuthenticated()" onclick="logout()">注销</a>
                     <form id="logoutForm" th:action="@{/logout}" method="post" hidden="hidden">
                         <input type="submit" value="Sign Out"/>
@@ -79,10 +96,22 @@
     </nav>
 </header>
 
-<footer data-th-fragment="footbar" class="footer">
+<!--*/-->
+<!-- Begin page content -->
+<div class="container">
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="博客标题" aria-label="blogTitle" />
+    </div>
+</div>
+<header th:replace="fragments/component :: pagination"/>
+
+
+<footer class="footer">
     <div class="container">
-        <span class="text-muted">Power by Mi&amp;Jack</span>
+        <span class="text-muted">Place sticky footer content here.</span>
     </div>
 </footer>
+
+
 </body>
 </html>

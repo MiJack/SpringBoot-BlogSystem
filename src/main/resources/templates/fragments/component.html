@@ -22,7 +22,7 @@
 <body>
 <!--/*@thymesVar id="pagination" type="com.mijack.sbbs.component.Pagination"*/-->
 
-<th:block data-th-fragment="pagination">
+<th:block data-th-fragment="pagination" th:if="${pagination!=null}">
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:if="${!pagination.isFirst()}">

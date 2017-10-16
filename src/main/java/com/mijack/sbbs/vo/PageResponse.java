@@ -1,4 +1,4 @@
-package com.mijack.sbbs.controller.api;
+package com.mijack.sbbs.vo;
 
 import java.util.HashMap;
 import java.util.List;

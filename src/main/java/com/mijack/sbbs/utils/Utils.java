@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 public class Utils {
     public static final Pattern PATTERN = Pattern.compile("^[a-zA-z0-9]+@[a-zA-z0-9]+(\\.[a-zA-z0-9]+)+$");
 
-    public static boolean isEquals(Object o1, Object o2) {
+    public static <T> boolean isEquals(T o1, T o2) {
         return o1 != null && o1.equals(o2);
     }
 

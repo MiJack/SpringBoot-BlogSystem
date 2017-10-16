@@ -2,8 +2,8 @@
 <html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>搜索</title>
+    <meta charset="UTF-8"></meta>
+    <title>博客系统</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
           integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
           crossorigin="anonymous"></link>
@@ -16,35 +16,105 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
             integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
             crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="/css/blog.css" th:href="@{/css/blog.css}">
-    </link>
-    <link rel="stylesheet" href="/css/signin.css">
+    <link rel="stylesheet" href="../static/css/blog.css" th:href="@{/css/blog.css}">
     </link>
 </head>
 <body>
+<header th:replace="fragments/nav :: navbar"/>
 
+<!--/*--><!--解析时删除-->
+
+<!-- Fixed navbar -->
+<header data-th-fragment="navbar">
+    <script>
+        function logout() {
+            $("#logoutForm").submit()
+        }
+
+        $(document).ready(function () {
+            $(".blog-nav-item").each(function () {
+                var pathname = window.location.pathname;
+                var element = $(this);
+                var locations = eval(element.data("location"));
+                var indexOf = locations.indexOf(pathname);
+                if (indexOf >= 0) {
+                    element.addClass("active");
+                }
+            });
+
+        });
+    </script>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <a class="navbar-brand" href="#">
+                <img class="navbar-brand d-inline-block align-top"
+                     src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" width="30"
+                     height="30" alt=""/>
+            </a>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link blog-nav-item" data-location="['/','/index.html']"
+                       href="/index.html">首页</a>
+                    <a class="nav-item nav-link blog-nav-item" data-location="['/owner/blogs.html']"
+                       sec:authorize="hasAnyRole('USER') and !hasAnyRole('ADMIN')"
+                       th:href="@{/owner/blogs.html}">我的博客</a>
+                    <a class="nav-item nav-link blog-nav-item" data-location="[]"
+                       sec:authorize="hasAnyRole('USER') and !hasAnyRole('ADMIN')"
+                       th:href="@{/newBlog.html}">新建博客</a>
+                    <a class="nav-item nav-link blog-nav-item" data-location="[]"
+                       sec:authorize="hasAnyRole('USER') and !hasAnyRole('ADMIN')"
+                       th:href="@{/search.html.html}">搜索</a>
+                    <a class="nav-item nav-link blog-nav-item" data-location="[]"
+                       sec:authorize="hasAnyRole('ADMIN')"
+                       href="/manager/users.html">用户管理</a>
+                    <a class="nav-item nav-link blog-nav-item" data-location="[]"
+                       sec:authorize="hasAnyRole('ADMIN')"
+                       href="/manager/blogs.html">博客管理</a>
+                    <a class="nav-item nav-link blog-nav-item" data-location="[]"
+                       sec:authorize="hasAnyRole('ADMIN')"
+                       href="/manager/categories.html">分类管理</a>
+
+                </div>
+            </div>
+            <div class="collapse navbar-collapse justify-content-end" style="margin-right: 200px">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="/login.html" data-location="[]"
+                       sec:authorize="isAnonymous()">登录</a>
+                    <a class="nav-item nav-link" href="/register.html" data-location="[]"
+                       sec:authorize="isAnonymous()">注册</a>
+                    <a class="nav-item nav-link" href="/owner" data-location="[]"
+                       sec:authorize="isAuthenticated()" sec:authentication="name"> 登录用户</a>
+                    <a class="nav-item nav-link" href="#" data-location="[]"
+                       sec:authorize="isAuthenticated()" onclick="logout()">注销</a>
+                    <form id="logoutForm" th:action="@{/logout}" method="post" hidden="hidden">
+                        <input type="submit" value="Sign Out"/>
+                    </form>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </nav>
+</header>
+
+<!--*/-->
+<!-- Begin page content -->
 <div class="container">
-
-    <form class="form-signin" action="/register">
-
-        <input type="hidden"
-               th:name="${_csrf.parameterName}"
-               th:value="${_csrf.token}"/>
-        <h2 class="form-signin-heading">搜索</h2>
-        <label for="inputName" class="sr-only">用户名</label>
-        <input type="email" id="inputName" class="form-control" placeholder="用户名" required autofocus>
-        <label for="inputEmail" class="sr-only">电子邮箱</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="邮箱" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="密码" required>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" value="remember-me"> 记住我
-            </label>
+    <div class="col-lg-12">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="搜索" aria-label="搜索"/>
+            <span class="input-group-btn">
+                <button class="btn btn-secondary" type="button">搜索</button>
+            </span>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
-    </form>
+    </div>
+</div>
+<footer class="footer">
+    <div class="container">
+        <span class="text-muted">Place sticky footer content here.</span>
+    </div>
+</footer>
 
-</div> <!-- /container -->
+
 </body>
 </html>
