@@ -1,6 +1,7 @@
 package com.mijack.sbbs.controller.api;
 
 import com.mijack.sbbs.auth.token.RestfulApiToken;
+import com.mijack.sbbs.vo.PageResponse;
 import com.mijack.sbbs.controller.base.BaseController;
 import com.mijack.sbbs.model.Blog;
 import com.mijack.sbbs.model.User;
@@ -28,8 +29,8 @@ public class ApiVoteController extends BaseController {
     VoteService voteService;
     @Autowired
     BlogService blogService;
-@Autowired
-UserService userService;
+    @Autowired
+    UserService userService;
 
     @GetMapping("/api/user/votes")
     public PageResponse<Vote> listUserVote(@RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
@@ -58,7 +59,7 @@ UserService userService;
                                            @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
                                            @RequestParam(value = "pageSize", required = false, defaultValue = "" + DEFAULT_BLOG_SIZE_PRE_PAGE) int pageSize) {
         User user = userService.findUser(userId);
-        if (user==null) {
+        if (user == null) {
             return PageResponse.failed("用户不存在");
         }
         Page<Vote> votePage = voteService.listUserVote(user, new PageRequest(pageIndex - 1, pageSize));

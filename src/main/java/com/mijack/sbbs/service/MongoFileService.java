@@ -1,6 +1,6 @@
 package com.mijack.sbbs.service;
 
-import com.mijack.sbbs.model.MongoFile;
+import com.mijack.sbbs.model.MongoGridFile;
 
 /**
  * @author Mr.Yuan
@@ -8,7 +8,9 @@ import com.mijack.sbbs.model.MongoFile;
  */
 public interface MongoFileService {
 
-    MongoFile saveMongoFile(MongoFile mongoFile);
+    MongoGridFile saveMongoGridFile(MongoGridFile mongoGridFile);
 
-    MongoFile updateMongoFile(String mongoFileId, MongoFile mongoFile);
+    MongoGridFile updateMongoFile(String mongoFileId, MongoGridFile mongoFile);
+
+    MongoGridFile findMongoFile(String requestURI);
 }

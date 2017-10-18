@@ -7,4 +7,6 @@ public interface UserService {
     User login(String username, String email, String password);
 
     User findUser(long userId);
+
+    User saveUser(User user);
 }

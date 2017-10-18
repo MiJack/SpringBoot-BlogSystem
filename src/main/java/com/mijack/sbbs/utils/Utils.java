@@ -2,8 +2,10 @@ package com.mijack.sbbs.utils;
 
 import org.springframework.security.core.Authentication;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -76,5 +78,13 @@ public class Utils {
             md5.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
         }
         return md5.toString();
+    }
+
+    public static InputStream inputStream(String s) {
+        return new ByteArrayInputStream(s.getBytes());
+    }
+
+    public static String encodeURI(String src) {
+        return URI.create(src).toString();
     }
 }

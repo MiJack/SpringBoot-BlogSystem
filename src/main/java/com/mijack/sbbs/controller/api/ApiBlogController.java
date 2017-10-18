@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 import java.util.UUID;
@@ -52,16 +53,16 @@ public class ApiBlogController extends ApiBaseController {
             return Response.failed("分类不存在");
         }
         Set<Tag> tags = tagService.findTags(blogTagSrc.split(","));
-        MongoFile mongoFile = new MongoFile(
-                blogTitle + MediaType.markdown.getExtensionName(),
-                MediaType.markdown,
-                blogMarkdown.length(),
-                Utils.getMD5(blogMarkdown.getBytes()),
-                blogMarkdown.getBytes(), "/resources/blogs/" + UUID.randomUUID().toString() + MediaType.markdown.getExtensionName(), user);
-        mongoFile = mongoFileService.saveMongoFile(mongoFile);
+        String blogName = Utils.encodeURI(blogTitle + MediaType.markdown.getExtensionName());
+        String blogPath = "/resource/blog/" + UUID.randomUUID().toString()
+                + MediaType.markdown.getExtensionName();
+        MongoGridFile mongoGridFile = new MongoGridFile(
+                Utils.inputStream(blogMarkdown), blogPath, blogName, user.getId(), MediaType.markdown);
+        MongoGridFile mongoFile = mongoFileService.saveMongoGridFile(mongoGridFile);
         Blog blog = new Blog(blogTitle, category, mongoFile.getPath(), user);
         blog.setDraft(isDraft);
         blog.setMongoFileId(mongoFile.getId());
+        blog.setMongoFilePath(mongoFile.getPath());
         blog.setTags(tags);
         blogService.saveBlog(blog);
         return Response.ok(blog).msg("保存成功");
@@ -95,15 +96,14 @@ public class ApiBlogController extends ApiBaseController {
         blog.setTags(tags);
         blog.setTitle(blogTitle);
         blog.setCategory(category);
-        MongoFile mongoFile = new MongoFile(
-                blogTitle + MediaType.markdown.getExtensionName(),
-                MediaType.markdown,
-                blogMarkdown.length(),
-                Utils.getMD5(blogMarkdown.getBytes()),
-                blogMarkdown.getBytes(), "/resources/blogs/" + UUID.randomUUID().toString() + MediaType.markdown.getExtensionName(), user);
-        mongoFile = mongoFileService.updateMongoFile(blog.getMongoFileId(), mongoFile);
+
+        String blogName = Utils.encodeURI(blogTitle + MediaType.markdown.getExtensionName());
+        MongoGridFile mongoGridFile = new MongoGridFile(
+                Utils.inputStream(blogMarkdown), blog.getMongoFilePath(), blogName, user.getId(), MediaType.markdown);
+        mongoGridFile = mongoFileService.updateMongoFile(blog.getMongoFileId(), mongoGridFile);
         blog.setDraft(isDraft);
-        blog.setMongoFileId(mongoFile.getId());
+        blog.setMongoFileId(mongoGridFile.getId());
+        blog.setMongoFilePath(mongoGridFile.getPath());
         blog.setTags(Sets.newHashSet(tags.iterator()));
         blogService.saveBlog(blog);
         return Response.ok(blog).msg("保存成功");

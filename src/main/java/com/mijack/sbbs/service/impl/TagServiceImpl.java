@@ -28,6 +28,9 @@ public class TagServiceImpl implements TagService {
         }
         for (String name : tagNames) {
             Tag tag = tagRepository.findTagByName(name);
+            if (tag == null) {
+                tag = tagRepository.save(new Tag(name));
+            }
             tags.add(tag);
         }
         return tags;

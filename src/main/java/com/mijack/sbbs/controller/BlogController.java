@@ -3,8 +3,10 @@ package com.mijack.sbbs.controller;
 import com.mijack.sbbs.component.Pagination;
 import com.mijack.sbbs.controller.base.BaseController;
 import com.mijack.sbbs.model.Blog;
+import com.mijack.sbbs.model.Category;
 import com.mijack.sbbs.model.User;
 import com.mijack.sbbs.service.BlogService;
+import com.mijack.sbbs.service.CategoryService;
 import com.mijack.sbbs.service.UserService;
 import com.mijack.sbbs.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 /**
  * @author Mr.Yuan
  * @since 2017/10/9
@@ -27,7 +31,8 @@ public class BlogController extends BaseController {
 
     @Autowired
     BlogService blogService;
-
+    @Autowired
+    CategoryService categoryService;
     @Autowired
     UserService userService;
 
@@ -54,7 +59,7 @@ public class BlogController extends BaseController {
                 , blogPage.isFirst()//是否为首页
                 , blogPage.isLast()//是否为末页
         );
-        model.addAttribute("user",user);
+        model.addAttribute("user", user);
         model.addAttribute("pagination", pagination);
         model.addAttribute("blogs", blogPage.getContent());
 
@@ -82,9 +87,19 @@ public class BlogController extends BaseController {
                 , blogPage.isFirst()//是否为首页
                 , blogPage.isLast()//是否为末页
         );
-        model.addAttribute("user",user);
+        model.addAttribute("user", user);
         model.addAttribute("pagination", pagination);
         model.addAttribute("blogs", blogPage.getContent());
         return "user/blog-list";
+    }
+
+    @GetMapping("/write-blog.html")
+    public String writeBlog(Authentication authentication, Model model) {
+        if (!Utils.isAuthenticated(authentication)) {
+            return "redirect:/login.html";
+        }
+        List<Category> categories = categoryService.listCategory();
+        model.addAttribute("categories",categories);
+        return "blog/blog-write";
     }
 }

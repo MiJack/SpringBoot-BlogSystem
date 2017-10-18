@@ -7,7 +7,7 @@ package com.mijack.sbbs.vo;
 
 public enum MediaType {
     markdown("markdown", "text/markdown", ".md"),
-    jpg("image", "image/jpg", ".jpg");
+    jpg("image", "images/jpg", ".jpg");
     private String name;
     private String contentType;
     private String extensionName;

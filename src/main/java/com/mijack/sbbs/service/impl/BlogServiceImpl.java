@@ -7,7 +7,6 @@ import com.mijack.sbbs.service.BlogService;
 import com.mijack.sbbs.utils.AssertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,14 +19,26 @@ import org.springframework.stereotype.Service;
 public class BlogServiceImpl implements BlogService {
     @Autowired
     BlogRepository blogRepository;
-    @Override
-    public Page<Blog> listBlog(Pageable pageable) {
-        return blogRepository.findAll(pageable);
-    }
 
     @Override
     public Page<Blog> listBlog(User user, Pageable pageable) {
         AssertUtils.notNoll(user, UsernameNotFoundException.class,"用户未找到");
         return blogRepository.findAllByUser(user,pageable);
+    }
+
+    @Override
+    public boolean deleteBlog(Blog blog) {
+        blogRepository.delete(blog);
+        return true;
+    }
+
+    @Override
+    public Blog findBlog(long blogId) {
+        return blogRepository.findOne(blogId);
+    }
+
+    @Override
+    public Blog saveBlog(Blog blog) {
+        return blogRepository.save(blog);
     }
 }

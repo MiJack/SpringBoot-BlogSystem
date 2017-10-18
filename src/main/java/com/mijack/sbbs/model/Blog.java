@@ -51,6 +51,7 @@ public class Blog {
     private Set<Tag> tags;
     private int hotValue = 0;
     private String mongoFileId;
+    private String mongoFilePath;
 
     public Blog() {
     }
@@ -194,5 +195,13 @@ public class Blog {
 
     public String getMongoFileId() {
         return mongoFileId;
+    }
+
+    public void setMongoFilePath(String mongoFilePath) {
+        this.mongoFilePath = mongoFilePath;
+    }
+
+    public String getMongoFilePath() {
+        return mongoFilePath;
     }
 }

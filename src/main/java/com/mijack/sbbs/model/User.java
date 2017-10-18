@@ -28,7 +28,7 @@ public class User implements UserDetails {
     @Pattern(regexp = "^[a-zA-z0-9]+@[a-zA-z0-9]+(\\.[a-zA-z0-9]+)+$")
     private String email;
     @NotNull
-    private String avatar = "http://localhost:8080/favicon.ico";
+    private String avatar = "http://localhost:8080/images/avatar.png";
 
     private int hotValue = 0;
     @Column(name = "update_time", nullable = false)

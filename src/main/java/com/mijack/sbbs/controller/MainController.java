@@ -72,4 +72,9 @@ public class MainController extends BaseController {
     public String register() {
         return "register";
     }
+
+    @GetMapping({"/search.html"})
+    public String search() {
+        return "search";
+    }
 }

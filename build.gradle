@@ -46,5 +46,6 @@ dependencies {
     //actuator
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-actuator-docs')
+    compile('org.springframework.boot:spring-boot-devtools')
     compile 'com.google.guava:guava:23.0'
 }

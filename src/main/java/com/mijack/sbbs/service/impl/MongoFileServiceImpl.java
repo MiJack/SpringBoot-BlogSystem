@@ -1,10 +1,13 @@
 package com.mijack.sbbs.service.impl;
 
-import com.mijack.sbbs.model.MongoFile;
-import com.mijack.sbbs.repository.MongoFileRepository;
+import com.mijack.sbbs.model.MongoGridFile;
 import com.mijack.sbbs.service.MongoFileService;
 import com.mijack.sbbs.utils.Utils;
+import com.mongodb.gridfs.GridFSFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,30 +17,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class MongoFileServiceImpl implements MongoFileService {
     @Autowired
-    MongoFileRepository mongoFileRepository;
+    GridFsTemplate gridFsTemplate;
 
     @Override
-    public MongoFile saveMongoFile(MongoFile mongoFile) {
-        return mongoFileRepository.save(mongoFile);
+    public MongoGridFile saveMongoGridFile(MongoGridFile mongoGridFile) {
+        GridFSFile gridFSFile = gridFsTemplate.store(mongoGridFile.getInputStream(), mongoGridFile.getPath()
+                , mongoGridFile.getDBObject());
+        mongoGridFile.setRawFile(gridFSFile);
+        return mongoGridFile;
     }
 
     @Override
-    public MongoFile updateMongoFile(String mongoFileId, MongoFile newMongoFile) {
-        if (mongoFileId == null) {
-            return null;
+    public MongoGridFile updateMongoFile(String mongoFileId, MongoGridFile newMongoFile) {
+        if (Utils.isEmpty(mongoFileId)) {
+            gridFsTemplate.delete(new Query(Criteria.where("_id").is(mongoFileId)));
         }
-        if (Utils.isEquals(mongoFileId, newMongoFile.getId())) {
-            return mongoFileRepository.save(newMongoFile);
-        }
-        MongoFile mongoFile = mongoFileRepository.findOne(mongoFileId);
-        mongoFile.setContent(newMongoFile.getContent());
-        mongoFile.setContentType(newMongoFile.getContentType());
-//        mongoFile.setId(newMongoFile.getId());
-        mongoFile.setMd5(newMongoFile.getMd5());
-        mongoFile.setName(newMongoFile.getName());
-        mongoFile.setOwner(newMongoFile.getOwner());
-        mongoFile.setPath(newMongoFile.getPath());
-        mongoFile.setSize(newMongoFile.getSize());
-        return mongoFileRepository.save(mongoFile);
+        return saveMongoGridFile(newMongoFile);
     }
 }
