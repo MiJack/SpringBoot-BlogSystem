@@ -2,7 +2,7 @@
 <html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"></meta>
+    <meta charset="UTF-8"/>
     <title>博客系统</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
           integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
@@ -16,8 +16,17 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
             integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
             crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../static/css/blog.css" th:href="@{/css/blog.css}">
+    <link rel="stylesheet" href="../../static/css/blog.css" th:href="@{/css/blog.css}">
     </link>
+    <style type="text/css">
+        .no-item-icon-list {
+            list-style: none;
+        }
+
+        .inline-block {
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
 <header th:replace="fragments/nav :: navbar"/>
@@ -100,11 +109,11 @@
 <!--*/-->
 <!-- Begin page content -->
 <div class="container">
-    <div>
-        <!--/*@thymesVar id="blogs" type="java.util.List<com.mijack.sbbs.model.Blog>"*/-->
-        <div th:each="blog:${blogs}">
-            <a th:text="${blog.title}" th:href="${'/uploader/'+blog.user.id+'/blog/'+blog.id}"></a>
-        </div>
+    <div class="row">
+
+        非编辑时 Markdown 转 HTML 的显示处理
+        Markdown to HTML for preview
+
     </div>
 </div>
 <header th:replace="fragments/component :: pagination"/>

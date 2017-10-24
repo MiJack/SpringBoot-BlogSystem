@@ -40,9 +40,9 @@
                 <div class="navbar-nav">
                     <a class="nav-item nav-link blog-nav-item" data-location="['/','/index.html']"
                        href="/index.html">首页</a>
-                    <a class="nav-item nav-link blog-nav-item" data-location="['/user/blogs.html']"
+                    <a class="nav-item nav-link blog-nav-item" data-location="['/uploader/blogs.html']"
                        sec:authorize="hasAnyRole('USER') and !hasAnyRole('ADMIN')"
-                       th:href="@{/user/blogs.html}">我的博客</a>
+                       th:href="@{/uploader/blogs.html}">我的博客</a>
                     <a class="nav-item nav-link blog-nav-item" data-location="['/write-blog.html']"
                        sec:authorize="hasAnyRole('USER') and !hasAnyRole('ADMIN')"
                        th:href="@{/write-blog.html}">新建博客</a>
@@ -66,7 +66,7 @@
                        sec:authorize="isAnonymous()">登录</a>
                     <a class="nav-item nav-link blog-nav-item" href="/register.html" data-location="['/register.html']"
                        sec:authorize="isAnonymous()">注册</a>
-                    <a class="nav-item nav-link blog-nav-item" href="/user.html" data-location="['/user.html']"
+                    <a class="nav-item nav-link blog-nav-item" href="/uploader.html" data-location="['/uploader.html']"
                        sec:authorize="isAuthenticated()" sec:authentication="name"> 登录用户</a>
                     <a class="nav-item nav-link blog-nav-item" href="#" data-location="[]"
                        sec:authorize="isAuthenticated()" onclick="logout()">注销</a>

@@ -42,4 +42,13 @@ public enum MediaType {
     public void setExtensionName(String extensionName) {
         this.extensionName = extensionName;
     }
+
+    public static MediaType from(String contentType) {
+        for (MediaType mediaType : values()) {
+            if (mediaType.contentType.equals(contentType)) {
+                return mediaType;
+            }
+        }
+        return null;
+    }
 }

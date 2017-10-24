@@ -5,16 +5,18 @@ import com.mijack.sbbs.controller.base.ApiBaseController;
 import com.mijack.sbbs.model.*;
 import com.mijack.sbbs.service.BlogService;
 import com.mijack.sbbs.service.CategoryService;
-import com.mijack.sbbs.service.MongoFileService;
+import com.mijack.sbbs.service.StorageService;
 import com.mijack.sbbs.service.TagService;
 import com.mijack.sbbs.utils.Utils;
+import com.mijack.sbbs.vo.FileType;
 import com.mijack.sbbs.vo.MediaType;
 import com.mijack.sbbs.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.ByteArrayInputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 import java.util.UUID;
@@ -34,7 +36,7 @@ public class ApiBlogController extends ApiBaseController {
     @Autowired
     TagService tagService;
     @Autowired
-    MongoFileService mongoFileService;
+    StorageService storageService;
 
     @PostMapping
     public Response<Blog> postBlog(
@@ -56,13 +58,12 @@ public class ApiBlogController extends ApiBaseController {
         String blogName = Utils.encodeURI(blogTitle + MediaType.markdown.getExtensionName());
         String blogPath = "/resource/blog/" + UUID.randomUUID().toString()
                 + MediaType.markdown.getExtensionName();
-        MongoGridFile mongoGridFile = new MongoGridFile(
-                Utils.inputStream(blogMarkdown), blogPath, blogName, user.getId(), MediaType.markdown);
-        MongoGridFile mongoFile = mongoFileService.saveMongoGridFile(mongoGridFile);
-        Blog blog = new Blog(blogTitle, category, mongoFile.getPath(), user);
+        StorageObject mongoGridFile = new StorageObject(blogPath, blogName, FileType.blog,user, MediaType.markdown);
+        mongoGridFile = storageService.saveStorageObject(mongoGridFile, Utils.inputStream(blogMarkdown));
+        Blog blog = new Blog(blogTitle, category, mongoGridFile.getResourcePath(), user);
         blog.setDraft(isDraft);
-        blog.setMongoFileId(mongoFile.getId());
-        blog.setMongoFilePath(mongoFile.getPath());
+        blog.setMongoFileId(mongoGridFile.getStorageId());
+        blog.setMongoFilePath(mongoGridFile.getResourcePath());
         blog.setTags(tags);
         blogService.saveBlog(blog);
         return Response.ok(blog).msg("保存成功");
@@ -70,7 +71,7 @@ public class ApiBlogController extends ApiBaseController {
 
     @PatchMapping
     public Response<Blog> patchBlog(
-            @RequestParam(value = "blog-id") Long blogId,
+            @RequestParam("blog-id") Long blogId,
             @RequestParam("blog-title") String blogTitle,
             @RequestParam("blog-markdown") String blogMarkdown,
             @RequestParam("blog-tags") String blogTagSrc,
@@ -98,12 +99,13 @@ public class ApiBlogController extends ApiBaseController {
         blog.setCategory(category);
 
         String blogName = Utils.encodeURI(blogTitle + MediaType.markdown.getExtensionName());
-        MongoGridFile mongoGridFile = new MongoGridFile(
-                Utils.inputStream(blogMarkdown), blog.getMongoFilePath(), blogName, user.getId(), MediaType.markdown);
-        mongoGridFile = mongoFileService.updateMongoFile(blog.getMongoFileId(), mongoGridFile);
+        StorageObject mongoGridFile = new StorageObject(
+                blog.getMongoFilePath(), blogName, FileType.blog,user, MediaType.markdown);
+        storageService.removeStorageObject(new Query(Criteria.where("_id").is(blog.getMongoFileId())));
+        mongoGridFile = storageService.saveStorageObject(mongoGridFile, Utils.inputStream(blogMarkdown));
         blog.setDraft(isDraft);
-        blog.setMongoFileId(mongoGridFile.getId());
-        blog.setMongoFilePath(mongoGridFile.getPath());
+        blog.setMongoFileId(mongoGridFile.getStorageId());
+        blog.setMongoFilePath(mongoGridFile.getResourcePath());
         blog.setTags(Sets.newHashSet(tags.iterator()));
         blogService.saveBlog(blog);
         return Response.ok(blog).msg("保存成功");
