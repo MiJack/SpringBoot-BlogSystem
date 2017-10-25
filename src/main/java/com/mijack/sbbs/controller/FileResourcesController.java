@@ -2,6 +2,7 @@ package com.mijack.sbbs.controller;
 
 import com.mijack.sbbs.model.StorageObject;
 import com.mijack.sbbs.service.StorageService;
+import com.mijack.sbbs.utils.Utils;
 import com.mongodb.gridfs.GridFSDBFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -74,7 +75,7 @@ public class FileResourcesController {
             GridFSDBFile rawFile = (GridFSDBFile) storageObject.getRawFile();
             InputStreamResource inputStreamResource = new InputStreamResource(rawFile.getInputStream());
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentDispositionFormData("attachment", URLEncoder.encode(storageObject.getOriginFileName(), "UTF-8"));
+            headers.setContentDispositionFormData("attachment", Utils.urlEncode(storageObject.getOriginFileName()));
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 
             HttpStatus statusCode = HttpStatus.OK;

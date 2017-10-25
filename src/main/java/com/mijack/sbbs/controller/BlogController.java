@@ -2,6 +2,8 @@ package com.mijack.sbbs.controller;
 
 import com.mijack.sbbs.component.Pagination;
 import com.mijack.sbbs.controller.base.BaseController;
+import com.mijack.sbbs.exceptions.BlogNotFoundException;
+import com.mijack.sbbs.exceptions.UserNotFoundException;
 import com.mijack.sbbs.model.Blog;
 import com.mijack.sbbs.model.Category;
 import com.mijack.sbbs.model.User;
@@ -99,7 +101,23 @@ public class BlogController extends BaseController {
             return "redirect:/login.html";
         }
         List<Category> categories = categoryService.listCategory();
-        model.addAttribute("categories",categories);
+        model.addAttribute("categories", categories);
         return "blog/blog-write";
+    }
+
+    @GetMapping("/user/{userId}/blog/{blogId}")
+    public String blogView(@PathVariable("userId") long userId,
+                           @PathVariable("blogId") long blogId,
+                           Model model) {
+        User user = userService.findUser(userId);
+        if (user == null) {
+            throw new UserNotFoundException("用户未找到");
+        }
+        Blog blog = blogService.findBlog(blogId);
+        if (blog == null || !Utils.isEquals(user, blog.getUser())) {
+            throw new BlogNotFoundException("博客未找到");
+        }
+        model.addAttribute("blog", blog);
+        return "blog/blog-view";
     }
 }

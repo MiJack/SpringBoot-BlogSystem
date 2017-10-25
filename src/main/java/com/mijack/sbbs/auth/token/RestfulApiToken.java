@@ -2,7 +2,9 @@ package com.mijack.sbbs.auth.token;
 
 import com.mijack.sbbs.model.User;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Collection;
 import java.util.Collections;
 
 public class RestfulApiToken extends AbstractAuthenticationToken {
@@ -67,5 +69,10 @@ public class RestfulApiToken extends AbstractAuthenticationToken {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    @Override
+    public Collection<GrantedAuthority> getAuthorities() {
+        return (Collection<GrantedAuthority>) user.getAuthorities();
     }
 }

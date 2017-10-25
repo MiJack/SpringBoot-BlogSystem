@@ -60,6 +60,9 @@ public class StorageServiceImpl implements StorageService {
     }
 
     public StorageObject create(GridFSDBFile file) {
+        if (file == null) {
+            return null;
+        }
         StorageObject storageObject = new StorageObject(
                 file.get("resourcePath").toString(),
                 file.get("originFileName").toString(),

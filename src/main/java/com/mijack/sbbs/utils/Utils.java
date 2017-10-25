@@ -5,7 +5,10 @@ import org.springframework.security.core.Authentication;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -84,7 +87,19 @@ public class Utils {
         return new ByteArrayInputStream(s.getBytes());
     }
 
-    public static String encodeURI(String src) {
-        return URI.create(src).toString();
+    public static String urlDecode(String src) {
+        try {
+            return URLDecoder.decode(src, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return base64Decoder(src);
+        }
+    }
+
+    public static String urlEncode(String src) {
+        try {
+            return URLEncoder.encode(src, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return base64Encode(src);
+        }
     }
 }

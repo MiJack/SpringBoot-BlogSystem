@@ -144,51 +144,6 @@ public class Blog {
         this.hotValue = hotValue;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Blog blog = (Blog) o;
-
-        if (draft != blog.draft) return false;
-        if (id != null ? !id.equals(blog.id) : blog.id != null) return false;
-        if (title != null ? !title.equals(blog.title) : blog.title != null) return false;
-        if (category != null ? !category.equals(blog.category) : blog.category != null) return false;
-        if (contentUrl != null ? !contentUrl.equals(blog.contentUrl) : blog.contentUrl != null) return false;
-        if (createTime != null ? !createTime.equals(blog.createTime) : blog.createTime != null) return false;
-        if (updateTime != null ? !updateTime.equals(blog.updateTime) : blog.updateTime != null) return false;
-        return user != null ? user.equals(blog.user) : blog.user == null;
-    }
-
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (category != null ? category.hashCode() : 0);
-        result = 31 * result + (draft ? 1 : 0);
-        result = 31 * result + (contentUrl != null ? contentUrl.hashCode() : 0);
-        result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
-        result = 31 * result + (updateTime != null ? updateTime.hashCode() : 0);
-        result = 31 * result + (user != null ? user.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Blog{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", category=" + category +
-                ", draft=" + draft +
-                ", contentUrl='" + contentUrl + '\'' +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                ", user=" + user +
-                '}';
-    }
-
     public void setMongoFileId(String mongoFileId) {
         this.mongoFileId = mongoFileId;
     }
@@ -203,5 +158,61 @@ public class Blog {
 
     public String getMongoFilePath() {
         return mongoFilePath;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Blog blog = (Blog) o;
+
+        if (draft != blog.draft) return false;
+        if (hotValue != blog.hotValue) return false;
+        if (id != null ? !id.equals(blog.id) : blog.id != null) return false;
+        if (title != null ? !title.equals(blog.title) : blog.title != null) return false;
+        if (category != null ? !category.equals(blog.category) : blog.category != null) return false;
+        if (contentUrl != null ? !contentUrl.equals(blog.contentUrl) : blog.contentUrl != null) return false;
+        if (createTime != null ? !createTime.equals(blog.createTime) : blog.createTime != null) return false;
+        if (updateTime != null ? !updateTime.equals(blog.updateTime) : blog.updateTime != null) return false;
+        if (user != null ? !user.equals(blog.user) : blog.user != null) return false;
+        if (tags != null ? !tags.equals(blog.tags) : blog.tags != null) return false;
+        if (mongoFileId != null ? !mongoFileId.equals(blog.mongoFileId) : blog.mongoFileId != null) return false;
+        return mongoFilePath != null ? mongoFilePath.equals(blog.mongoFilePath) : blog.mongoFilePath == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (category != null ? category.hashCode() : 0);
+        result = 31 * result + (draft ? 1 : 0);
+        result = 31 * result + (contentUrl != null ? contentUrl.hashCode() : 0);
+        result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
+        result = 31 * result + (updateTime != null ? updateTime.hashCode() : 0);
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (tags != null ? tags.hashCode() : 0);
+        result = 31 * result + hotValue;
+        result = 31 * result + (mongoFileId != null ? mongoFileId.hashCode() : 0);
+        result = 31 * result + (mongoFilePath != null ? mongoFilePath.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Blog{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", category=" + category +
+                ", draft=" + draft +
+                ", contentUrl='" + contentUrl + '\'' +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", user=" + user +
+                ", tags=" + tags +
+                ", hotValue=" + hotValue +
+                ", mongoFileId='" + mongoFileId + '\'' +
+                ", mongoFilePath='" + mongoFilePath + '\'' +
+                '}';
     }
 }

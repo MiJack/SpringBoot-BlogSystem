@@ -55,10 +55,10 @@ public class ApiBlogController extends ApiBaseController {
             return Response.failed("分类不存在");
         }
         Set<Tag> tags = tagService.findTags(blogTagSrc.split(","));
-        String blogName = Utils.encodeURI(blogTitle + MediaType.markdown.getExtensionName());
+        String blogName = blogTitle + MediaType.markdown.getExtensionName();
         String blogPath = "/resource/blog/" + UUID.randomUUID().toString()
                 + MediaType.markdown.getExtensionName();
-        StorageObject mongoGridFile = new StorageObject(blogPath, blogName, FileType.blog,user, MediaType.markdown);
+        StorageObject mongoGridFile = new StorageObject(blogPath, blogName, FileType.blog, user, MediaType.markdown);
         mongoGridFile = storageService.saveStorageObject(mongoGridFile, Utils.inputStream(blogMarkdown));
         Blog blog = new Blog(blogTitle, category, mongoGridFile.getResourcePath(), user);
         blog.setDraft(isDraft);
@@ -98,9 +98,9 @@ public class ApiBlogController extends ApiBaseController {
         blog.setTitle(blogTitle);
         blog.setCategory(category);
 
-        String blogName = Utils.encodeURI(blogTitle + MediaType.markdown.getExtensionName());
+        String blogName = blogTitle + MediaType.markdown.getExtensionName();
         StorageObject mongoGridFile = new StorageObject(
-                blog.getMongoFilePath(), blogName, FileType.blog,user, MediaType.markdown);
+                blog.getMongoFilePath(), blogName, FileType.blog, user, MediaType.markdown);
         storageService.removeStorageObject(new Query(Criteria.where("_id").is(blog.getMongoFileId())));
         mongoGridFile = storageService.saveStorageObject(mongoGridFile, Utils.inputStream(blogMarkdown));
         blog.setDraft(isDraft);
