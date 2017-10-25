@@ -57,7 +57,7 @@
                 <div class="navbar-nav">
                     <a class="nav-item nav-link blog-nav-item" data-location="['/','/index.html']"
                        href="/index.html">首页</a>
-                    <a class="nav-item nav-link blog-nav-item" data-location="['/owner/blogs.html']"
+                    <a class="nav-item nav-link blog-nav-item" data-location="['/user/blogs.html']"
                        sec:authorize="hasAnyRole('USER') and !hasAnyRole('ADMIN')"
                        th:href="@{/owner/blogs.html}">我的博客</a>
                     <a class="nav-item nav-link blog-nav-item" data-location="[]"
@@ -103,7 +103,7 @@
     <div>
         <!--/*@thymesVar id="blogs" type="java.util.List<com.mijack.sbbs.model.Blog>"*/-->
         <div th:each="blog:${blogs}">
-            <a th:text="${blog.title}" th:href="${'/uploader/'+blog.user.id+'/blog/'+blog.id}"></a>
+            <a th:text="${blog.title}" th:href="${'/user/'+blog.user.id+'/blog/'+blog.id}"></a>
         </div>
     </div>
 </div>

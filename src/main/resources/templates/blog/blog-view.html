@@ -113,13 +113,13 @@
 
         非编辑时 Markdown 转 HTML 的显示处理
         Markdown to HTML for preview
-
+        <!--/*@thymesVar id="blog" type="com.mijack.sbbs.model.Blog"*/-->
+        <span th:text="${blog.toString()}"></span>
     </div>
 </div>
 <header th:replace="fragments/component :: pagination"/>
 
 <header th:replace="fragments/nav :: footbar"/>
-
 
 
 </body>

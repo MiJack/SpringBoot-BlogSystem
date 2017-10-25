@@ -40,22 +40,22 @@
                 <div class="navbar-nav">
                     <a class="nav-item nav-link blog-nav-item" data-location="['/','/index.html']"
                        href="/index.html">首页</a>
-                    <a class="nav-item nav-link blog-nav-item" data-location="['/uploader/blogs.html']"
-                       sec:authorize="hasAnyRole('USER') and !hasAnyRole('ADMIN')"
-                       th:href="@{/uploader/blogs.html}">我的博客</a>
+                    <a class="nav-item nav-link blog-nav-item" data-location="['/user/blogs.html']"
+                       sec:authorize="hasAnyRole('ROLE_USER') and !hasAnyRole('ROLE_ADMIN')"
+                       th:href="@{/user/blogs.html}">我的博客</a>
                     <a class="nav-item nav-link blog-nav-item" data-location="['/write-blog.html']"
-                       sec:authorize="hasAnyRole('USER') and !hasAnyRole('ADMIN')"
+                       sec:authorize="hasAnyRole('ROLE_USER') and !hasAnyRole('ROLE_ADMIN')"
                        th:href="@{/write-blog.html}">新建博客</a>
                     <a class="nav-item nav-link blog-nav-item" data-location="['/search.html']"
                        th:href="@{/search.html}">搜索</a>
                     <a class="nav-item nav-link blog-nav-item" data-location="['/manager/users.html']"
-                       sec:authorize="hasAnyRole('ADMIN')"
+                       sec:authorize="hasAnyRole('ROLE_ADMIN')"
                        href="/manager/users.html">用户管理</a>
                     <a class="nav-item nav-link blog-nav-item" data-location="['/manager/blogs.html']"
-                       sec:authorize="hasAnyRole('ADMIN')"
+                       sec:authorize="hasAnyRole('ROLE_ADMIN')"
                        href="/manager/blogs.html">博客管理</a>
                     <a class="nav-item nav-link blog-nav-item" data-location="['/manager/categories.html']"
-                       sec:authorize="hasAnyRole('ADMIN')"
+                       sec:authorize="hasAnyRole('ROLE_ADMIN')"
                        href="/manager/categories.html">分类管理</a>
 
                 </div>
@@ -66,7 +66,7 @@
                        sec:authorize="isAnonymous()">登录</a>
                     <a class="nav-item nav-link blog-nav-item" href="/register.html" data-location="['/register.html']"
                        sec:authorize="isAnonymous()">注册</a>
-                    <a class="nav-item nav-link blog-nav-item" href="/uploader.html" data-location="['/uploader.html']"
+                    <a class="nav-item nav-link blog-nav-item" href="/user.html" data-location="['/user.html']"
                        sec:authorize="isAuthenticated()" sec:authentication="name"> 登录用户</a>
                     <a class="nav-item nav-link blog-nav-item" href="#" data-location="[]"
                        sec:authorize="isAuthenticated()" onclick="logout()">注销</a>

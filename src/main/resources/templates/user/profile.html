@@ -107,23 +107,23 @@
 <!--*/-->
 <!-- Begin page content -->
 <div class="container">
-    <!--/*@thymesVar id="uploader" type="com.mijack.sbbs.model.User"*/-->
+    <!--/*@thymesVar id="user" type="com.mijack.sbbs.model.User"*/-->
 
     <!--<span th:text="${uploader.toString()}"></span>-->
 
     <div class="row">
         <div class="col-3 card">
-            <img class="big-avatar " align="center" th:src="${uploader.avatar}"/>
+            <img class="big-avatar " align="center" th:src="${user.avatar}"/>
         </div>
         <div class="col-9 card">
             <div class="card-body">
                 <div class="row">
                     <div class="col-3">用户名</div>
-                    <div class="col-9" th:text="${uploader.username}"/>
+                    <div class="col-9" th:text="${user.username}"/>
                 </div>
                 <div class="row">
                     <div class="col-3">邮箱</div>
-                    <div class="col-9" th:text="${uploader.email}"/>
+                    <div class="col-9" th:text="${user.email}"/>
                 </div>
                 <div class="row">
                     <button type="button" class="btn btn-primary">修改头像</button>

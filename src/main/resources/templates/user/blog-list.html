@@ -102,7 +102,7 @@
     <div>
         <!--/*@thymesVar id="blogs" type="java.util.List<com.mijack.sbbs.model.Blog>"*/-->
         <div th:each="blog:${blogs}">
-            <a th:text="${blog.title}" th:href="${'/uploader/'+blog.uploader.id+'/blog/'+blog.id}"></a>
+            <a th:text="${blog.title}" th:href="${'/user/'+blog.user.id+'/blog/'+blog.id}"></a>
         </div>
     </div>
 
