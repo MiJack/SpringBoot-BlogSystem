@@ -73,8 +73,4 @@ public class MainController extends BaseController {
         return "register";
     }
 
-    @GetMapping({"/search.html"})
-    public String search() {
-        return "search";
-    }
 }

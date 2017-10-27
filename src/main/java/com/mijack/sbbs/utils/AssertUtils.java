@@ -1,10 +1,6 @@
 package com.mijack.sbbs.utils;
 
-import com.mijack.sbbs.model.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Mr.Yuan

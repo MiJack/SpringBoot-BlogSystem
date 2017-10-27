@@ -9,4 +9,6 @@ public interface UserService {
     User findUser(long userId);
 
     User saveUser(User user);
+
+    User createUser(String name, String email, String password);
 }

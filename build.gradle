@@ -50,5 +50,6 @@ dependencies {
     compile 'com.google.guava:guava:23.0'
     // https://mvnrepository.com/artifact/commons-io/commons-io
     compile group: 'commons-io', name: 'commons-io', version: '2.4'
+    compile 'com.squareup.okio:okio:1.13.0'
 
 }

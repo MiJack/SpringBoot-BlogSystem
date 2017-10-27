@@ -26,4 +26,7 @@ public interface BlogService {
     Blog createBlog(User user, String blogTitle, String blogMarkdown, Category category, Set<Tag> tags, boolean isDraft);
 
     Blog updateBlog(Blog blog, User user, String blogTitle, String blogMarkdown, Category category, Set<Tag> tags, boolean isDraft);
+
+    void deleteAllBlog();
+
 }

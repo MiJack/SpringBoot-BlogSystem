@@ -128,4 +128,13 @@ public class BlogServiceImpl implements BlogService {
         blog.setTags(Sets.newHashSet(tags.iterator()));
         return saveBlog(blog);
     }
+
+    @Override
+    public void deleteAllBlog() {
+        blogRepository.findAll().forEach(blog -> {
+            blogRepository.delete(blog);
+            storageService.removeStorageObject(blogQuery(blog));
+            esBlogRepository.delete(blog.getId());
+        });
+    }
 }
