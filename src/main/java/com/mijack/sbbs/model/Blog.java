@@ -22,7 +22,7 @@ public class Blog {
     private String title;
 
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "category")
     private Category category;
     private boolean draft;

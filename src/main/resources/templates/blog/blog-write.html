@@ -162,8 +162,8 @@
         }
         var blogMarkdown = testEditor.getMarkdown();// 获取 Markdown 源码
 
-        var blogId = $("#blog-id").val();
-        var create = isEmpty(blogId);
+        var id = $("#blog-id").val();
+        var create = isEmpty(id);
         var submitType = create ? "POST" : "PATCH";
         var blogData = create ? {
                 "blog-title": blogTitle,
@@ -173,7 +173,7 @@
                 "blog-draft": isDraft
             } :
             {
-                "blog-id": blogId,
+                "blog-id": id,
                 "blog-title": blogTitle,
                 "blog-markdown": blogMarkdown,
                 "blog-tags": blogTagSrc,

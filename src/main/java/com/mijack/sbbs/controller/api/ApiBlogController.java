@@ -1,25 +1,22 @@
 package com.mijack.sbbs.controller.api;
 
-import com.google.common.collect.Sets;
 import com.mijack.sbbs.controller.base.ApiBaseController;
-import com.mijack.sbbs.model.*;
+import com.mijack.sbbs.model.Blog;
+import com.mijack.sbbs.model.Category;
+import com.mijack.sbbs.model.Tag;
+import com.mijack.sbbs.model.User;
 import com.mijack.sbbs.service.BlogService;
 import com.mijack.sbbs.service.CategoryService;
 import com.mijack.sbbs.service.StorageService;
 import com.mijack.sbbs.service.TagService;
 import com.mijack.sbbs.utils.Utils;
-import com.mijack.sbbs.vo.FileType;
-import com.mijack.sbbs.vo.MediaType;
 import com.mijack.sbbs.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * @author Mr.Yuan
@@ -55,17 +52,7 @@ public class ApiBlogController extends ApiBaseController {
             return Response.failed("分类不存在");
         }
         Set<Tag> tags = tagService.findTags(blogTagSrc.split(","));
-        String blogName = blogTitle + MediaType.markdown.getExtensionName();
-        String blogPath = "/resource/blog/" + UUID.randomUUID().toString()
-                + MediaType.markdown.getExtensionName();
-        StorageObject mongoGridFile = new StorageObject(blogPath, blogName, FileType.blog, user, MediaType.markdown);
-        mongoGridFile = storageService.saveStorageObject(mongoGridFile, Utils.inputStream(blogMarkdown));
-        Blog blog = new Blog(blogTitle, category, mongoGridFile.getResourcePath(), user);
-        blog.setDraft(isDraft);
-        blog.setMongoFileId(mongoGridFile.getStorageId());
-        blog.setMongoFilePath(mongoGridFile.getResourcePath());
-        blog.setTags(tags);
-        blogService.saveBlog(blog);
+        Blog blog = blogService.createBlog(user, blogTitle, blogMarkdown, category, tags, isDraft);
         return Response.ok(blog).msg("保存成功");
     }
 
@@ -94,20 +81,8 @@ public class ApiBlogController extends ApiBaseController {
             return Response.failed("分类不存在");
         }
         Set<Tag> tags = tagService.findTags(blogTagSrc.split(","));
-        blog.setTags(tags);
-        blog.setTitle(blogTitle);
-        blog.setCategory(category);
+        blog = blogService.updateBlog(blog, user, blogTitle, blogMarkdown, category, tags, isDraft);
 
-        String blogName = blogTitle + MediaType.markdown.getExtensionName();
-        StorageObject mongoGridFile = new StorageObject(
-                blog.getMongoFilePath(), blogName, FileType.blog, user, MediaType.markdown);
-        storageService.removeStorageObject(new Query(Criteria.where("_id").is(blog.getMongoFileId())));
-        mongoGridFile = storageService.saveStorageObject(mongoGridFile, Utils.inputStream(blogMarkdown));
-        blog.setDraft(isDraft);
-        blog.setMongoFileId(mongoGridFile.getStorageId());
-        blog.setMongoFilePath(mongoGridFile.getResourcePath());
-        blog.setTags(Sets.newHashSet(tags.iterator()));
-        blogService.saveBlog(blog);
         return Response.ok(blog).msg("保存成功");
     }
 

@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BlogRepository extends PagingAndSortingRepository<Blog, Long> {
     Page<Blog> findAllByUser(User user, Pageable pageable);
+
+    Page<Blog> findAllByDraft(boolean draft, Pageable pageable);
 }

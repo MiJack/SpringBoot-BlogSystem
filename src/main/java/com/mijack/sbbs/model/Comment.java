@@ -16,11 +16,11 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 自增长策略
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "user")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "blog")
     private Blog blog;
 

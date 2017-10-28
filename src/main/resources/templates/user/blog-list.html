@@ -103,6 +103,7 @@
         <!--/*@thymesVar id="blogs" type="java.util.List<com.mijack.sbbs.model.Blog>"*/-->
         <div th:each="blog:${blogs}">
             <a th:text="${blog.title}" th:href="${'/user/'+blog.user.id+'/blog/'+blog.id}"></a>
+            <button class="btn">删除</button>
         </div>
     </div>
 

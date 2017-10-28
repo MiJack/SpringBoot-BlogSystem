@@ -7,10 +7,15 @@ import java.lang.reflect.Constructor;
  * @since 2017/10/10
  */
 public class AssertUtils {
-    public static void notNoll(Object o, Class<? extends RuntimeException> clazz, String msg) {
+    public static void notNull(Object o, Class<? extends RuntimeException> clazz, String msg) {
         if (o != null) {
             return;
         }
+        throwException(clazz, msg);
+        return;
+    }
+
+    private static void throwException(Class<? extends RuntimeException> clazz, String msg) {
         try {
             Constructor<? extends RuntimeException> constructor = clazz.getConstructor(String.class);
             RuntimeException runtimeException = constructor.newInstance(msg);
@@ -18,6 +23,13 @@ public class AssertUtils {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void isNull(Object o, Class<? extends RuntimeException> clazz, String msg) {
+        if (o == null) {
+            return;
+        }
+        throwException(clazz, msg);
     }
 
 }

@@ -40,7 +40,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public Page<Blog> listBlog(User user, Pageable pageable) {
-        AssertUtils.notNoll(user, UsernameNotFoundException.class, "用户未找到");
+        AssertUtils.notNull(user, UsernameNotFoundException.class, "用户未找到");
         return blogRepository.findAllByUser(user, pageable);
     }
 
