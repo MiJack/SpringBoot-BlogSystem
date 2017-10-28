@@ -52,7 +52,7 @@ public class ApiUserController {
                 .msg("登录成功");
     }
 
-    @PatchMapping()
+    @PatchMapping("/password")
     @ResponseBody
     public Response password(
             @RequestParam("old-password") String oldPassword,
@@ -67,8 +67,46 @@ public class ApiUserController {
             return Response.failed("用户原密码错误");
         }
         user.setPassword(newPassword);
-        user = userService.saveUser(user);
+        user = userService.updatePassword(user, oldPassword, newPassword);
         return Response.ok(user)
                 .msg("密码修改成功");
+    }
+
+    @PutMapping("/profile/email")
+    @ResponseBody
+    public Response<User> profileEmail(
+            @RequestParam("email") String email,
+            Authentication authentication) {
+        if (!Utils.isAuthenticated(authentication)) {
+            return Response.<User>ok(null).code(0).msg("接口未授权");
+        }
+        if (email == null) {
+            return Response.failed("缺少必要的参数");
+        }
+        RestfulApiToken token = (RestfulApiToken) authentication;
+        User user = token.getUser();
+        user = userService.updateEmail(user, email);
+        // 处理结果
+        return Response.ok(user)
+                .msg("邮箱修改成功");
+    }
+
+    @PutMapping("/profile/username")
+    @ResponseBody
+    public Response<User> profileUsername(
+            @RequestParam("username") String username,
+            Authentication authentication) {
+        if (!Utils.isAuthenticated(authentication)) {
+            return Response.<User>ok(null).code(0).msg("接口未授权");
+        }
+        if (username == null) {
+            return Response.failed("缺少必要的参数");
+        }
+        RestfulApiToken token = (RestfulApiToken) authentication;
+        User user = token.getUser();
+        user = userService.updateUsername(user, username);
+        // 处理结果
+        return Response.ok(user)
+                .msg("用户名修改成功");
     }
 }

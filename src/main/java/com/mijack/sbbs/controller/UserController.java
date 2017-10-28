@@ -1,6 +1,7 @@
 package com.mijack.sbbs.controller;
 
 import com.mijack.sbbs.controller.base.BaseController;
+import com.mijack.sbbs.exceptions.UserNotFoundException;
 import com.mijack.sbbs.model.User;
 import com.mijack.sbbs.service.UserService;
 import com.mijack.sbbs.utils.Utils;
@@ -13,10 +14,7 @@ import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +37,18 @@ public class UserController extends BaseController {
         }
         User user = (User) authentication.getPrincipal();
         model.addAttribute("user", user);
+        model.addAttribute("modifyShow", true);
+        return "user/profile";
+    }
+
+    @GetMapping("/user/{id}")
+    public String user(@PathVariable("id") long id, Model model) {
+        User user = userService.findUser(id);
+        if (user == null) {
+            throw new UserNotFoundException("id为" + id + "的用户不存在");
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("modifyShow", false);
         return "user/profile";
     }
 

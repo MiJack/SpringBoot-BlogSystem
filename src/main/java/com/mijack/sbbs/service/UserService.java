@@ -8,7 +8,11 @@ public interface UserService {
 
     User findUser(long userId);
 
-    User saveUser(User user);
-
     User createUser(String name, String email, String password);
+
+    User updatePassword(User user, String oldPassword, String newPassword);
+
+    User updateEmail(User user, String email);
+
+    User updateUsername(User user, String username);
 }
