@@ -1,5 +1,8 @@
 package com.mijack.sbbs.utils;
 
+import com.youbenzi.mdtool.tool.MDTool;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.security.core.Authentication;
 
 import java.io.ByteArrayInputStream;
@@ -101,5 +104,14 @@ public class Utils {
         } catch (UnsupportedEncodingException e) {
             return base64Encode(src);
         }
+    }
+
+    public static String markdownSummary(String markdown) {
+        Document document = Jsoup.parse(MDTool.markdown2Html(markdown));
+        String text = document.text();
+        if (text.length() < 200) {
+            return text;
+        }
+        return text.substring(0, 200);
     }
 }

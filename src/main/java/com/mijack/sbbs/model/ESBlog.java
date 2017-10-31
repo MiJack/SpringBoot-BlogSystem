@@ -22,6 +22,7 @@ public class ESBlog {
     private Long id; // Blog 实体的 id
     private String title;
     private String content;
+    private String summary;
     @Field(index = FieldIndex.not_analyzed)  // 不做全文检索字段
     private User user;
     private Set<Tag> tags;  // 标签
@@ -34,10 +35,11 @@ public class ESBlog {
     public ESBlog() {
     }
 
-    public ESBlog(Long id, String title, String content, User user, Category category, Set<Tag> tags, Timestamp createTime, Timestamp updateTime) {
+    public ESBlog(Long id, String title, String content, String summary,User user, Category category, Set<Tag> tags, Timestamp createTime, Timestamp updateTime) {
         this.id = id;
         this.title = title;
         this.content = content;
+        this.summary = summary;
         this.user = user;
         this.tags = tags;
         this.category = category;
@@ -107,6 +109,14 @@ public class ESBlog {
 
     public void setUpdateTime(Timestamp updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 }
 

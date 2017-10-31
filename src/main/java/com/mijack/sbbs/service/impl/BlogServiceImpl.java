@@ -15,6 +15,7 @@ import okio.ByteString;
 import okio.Okio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -45,6 +46,16 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    public Page<Blog> listBlog(Tag tag, Pageable pageable) {
+        return blogRepository.findAllByTagsContainingAndDraft(tag, false, pageable);
+    }
+
+    @Override
+    public Page<Blog> listBlog(Category category, Pageable pageable) {
+        return blogRepository.findAllByCategoryAndDraft(category, false, pageable);
+    }
+
+    @Override
     public boolean deleteBlog(Blog blog) {
         // 移除MongoDB和elasticsearch
         blogRepository.delete(blog);
@@ -63,9 +74,18 @@ public class BlogServiceImpl implements BlogService {
         // 更新数据库
         blog = blogRepository.save(blog);
         // 更新elasticsearch
+        String blogContent = getBlogContent(blog);
+        String summary = blog.getSummary();
+        if (Utils.isEmpty(summary)) {
+            summary = Utils.markdownSummary(blogContent);
+            blog.setSummary(summary);
+            blog = blogRepository.save(blog);
+        }
         ESBlog esBlog = new ESBlog(blog.getId(),
                 blog.getTitle(),
-                getBlogContent(blog), blog.getUser(),
+                blogContent,
+                Utils.isEmpty(summary) ? Utils.markdownSummary(blogContent) : summary,
+                blog.getUser(),
                 blog.getCategory(), blog.getTags(), blog.getCreateTime(), blog.getUpdateTime());
         esBlogRepository.save(esBlog);
         return blog;
@@ -103,7 +123,7 @@ public class BlogServiceImpl implements BlogService {
                 + MediaType.markdown.getExtensionName();
         StorageObject mongoGridFile = new StorageObject(blogPath, blogName, FileType.blog, user, MediaType.markdown);
         mongoGridFile = storageService.saveStorageObject(mongoGridFile, Utils.inputStream(blogMarkdown));
-        Blog blog = new Blog(blogTitle, category, mongoGridFile.getResourcePath(), user);
+        Blog blog = new Blog(blogTitle, category, mongoGridFile.getResourcePath(), user, Utils.markdownSummary(blogMarkdown));
         blog.setDraft(isDraft);
         blog.setMongoFileId(mongoGridFile.getStorageId());
         blog.setMongoFilePath(mongoGridFile.getResourcePath());
@@ -123,6 +143,7 @@ public class BlogServiceImpl implements BlogService {
         storageService.removeStorageObject(new Query(Criteria.where("_id").is(blog.getMongoFileId())));
         mongoGridFile = storageService.saveStorageObject(mongoGridFile, Utils.inputStream(blogMarkdown));
         blog.setDraft(isDraft);
+        blog.setSummary(Utils.markdownSummary(blogMarkdown));
         blog.setMongoFileId(mongoGridFile.getStorageId());
         blog.setMongoFilePath(mongoGridFile.getResourcePath());
         blog.setTags(Sets.newHashSet(tags.iterator()));

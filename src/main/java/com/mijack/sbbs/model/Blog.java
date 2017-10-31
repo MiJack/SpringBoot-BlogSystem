@@ -49,6 +49,7 @@ public class Blog {
             joinColumns = @JoinColumn(name = "blogId", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tagId", referencedColumnName = "id"))
     private Set<Tag> tags;
+    private String summary;
     private int hotValue = 0;
     private String mongoFileId;
     private String mongoFilePath;
@@ -56,11 +57,12 @@ public class Blog {
     public Blog() {
     }
 
-    public Blog(String title, Category category, String contentUrl, User user) {
+    public Blog(String title, Category category, String contentUrl, User user,String summary) {
         this.title = title;
         this.category = category;
         this.contentUrl = contentUrl;
         this.user = user;
+        this.summary = summary;
     }
 
     public Long getId() {
@@ -158,6 +160,14 @@ public class Blog {
 
     public String getMongoFilePath() {
         return mongoFilePath;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     @Override

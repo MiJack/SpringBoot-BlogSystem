@@ -30,14 +30,14 @@ public class MainServiceImpl implements MainService {
     public Page<Blog> listHotBlog(Pageable pageable) {
         PageRequest hotValue = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(),
                 new Sort(new Sort.Order(Sort.Direction.DESC, "hotValue")));
-        return blogRepository.findAll(hotValue);
+        return blogRepository.findAllByDraft(false, hotValue);
     }
 
     @Override
     public Page<Blog> listNewBlog(Pageable pageable) {
         PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(),
                 Sort.Direction.DESC, "updateTime", "createTime");
-        return blogRepository.findAll(pageRequest);
+        return blogRepository.findAllByDraft(false, pageRequest);
     }
 
     @Override

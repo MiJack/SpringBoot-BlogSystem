@@ -2,7 +2,7 @@
 <html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"></meta>
+    <meta charset="UTF-8"/>
     <title>博客系统</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
           integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
@@ -16,9 +16,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
             integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
             crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../static/css/blog.css" th:href="@{/css/blog.css}">
-    </link>
-</head>
+    <link rel="stylesheet" href="../../static/css/blog.css" th:href="@{/css/blog.css}">
+    </link></head>
 <body>
 <header th:replace="fragments/nav :: navbar"/>
 
@@ -57,7 +56,7 @@
                 <div class="navbar-nav">
                     <a class="nav-item nav-link blog-nav-item" data-location="['/','/index.html']"
                        href="/index.html">首页</a>
-                    <a class="nav-item nav-link blog-nav-item" data-location="['/user/blogs.html']"
+                    <a class="nav-item nav-link blog-nav-item" data-location="['/owner/blogs.html']"
                        sec:authorize="hasAnyRole('USER') and !hasAnyRole('ADMIN')"
                        th:href="@{/owner/blogs.html}">我的博客</a>
                     <a class="nav-item nav-link blog-nav-item" data-location="[]"
@@ -101,107 +100,69 @@
 <!-- Begin page content -->
 <div class="container">
     <!--/*@thymesVar id="blogs" type="java.util.List<com.mijack.sbbs.model.Blog>"*/-->
-    <!--/*@thymesVar id="hotBlogs" type="java.util.List<com.mijack.sbbs.model.Blog>"*/-->
-    <!--/*@thymesVar id="hotUsers" type="java.util.List<com.mijack.sbbs.model.User>"*/-->
-    <!--/*@thymesVar id="hotTags" type="java.util.List<com.mijack.sbbs.model.Tag>"*/-->
-    <!--/*@thymesVar id="categories" type="java.util.List<com.mijack.sbbs.model.Category>"*/-->
-    <div>
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <div th:each="blog:${blogs}">
-                        <div class="card ">
-                            <div class="card-header bg-transparent ">
-                                <img th:src="${blog.user.avatar}" class="small-avatar" th:alt="${blog.user.username}"/>
-                                <div class="inline-block">
-                                    <h4 class="card-title">
-                                        <a th:text="${blog.title}"
-                                           th:href="${'/user/'+blog.user.id+'/blog/'+blog.id}"></a>
-                                    </h4>
-
-                                </div>
-                                <div class="float-right">
-                                    <a th:each="tag:${blog.tags}" th:href="${'/tag/'+tag.id}" class="inline-block">
-                                        <span th:text="${tag.name}" class="badge badge-secondary"/>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="card-body ">
-
-                                <p class="card-text">Some quick example text to build on the card title and make up the
-                                    bulk of the card's content.</p>
-                            </div>
-                            <div class="card-footer bg-transparent ">
-                                <span class="float-right"
-                                      th:text="'更新时间：'+${#dates.format(blog.updateTime, 'yyyy年MM月dd日 HH:mm')}"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <header th:replace="fragments/component :: pagination"/>
-                </div>
-                <div class="col-3">
-                    <div>
-                        <div class="card ">
-                            <div class="card-header bg-transparent">
-                                博客分类
-                            </div>
-                            <div class="card-body ">
-                                <div>
-                                    <h6 th:each="category:${categories}" class="inline-block">
-                                        <a th:href="${'/category/'+category.id}">
-                                            <span th:text="${category.name}" class="badge badge-secondary"/>
-                                        </a>
-                                    </h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="card ">
-                            <div class="card-header bg-transparent">
-                                热门博客
-                            </div>
-                            <div class="card-body ">
-                                <div th:each="blog:${hotBlogs}">
-                                    <a th:text="${blog.title}" th:href="${'/user/'+blog.user.id+'/blog/'+blog.id}"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-
-                        <div class="card ">
-                            <div class="card-header bg-transparent ">
-                                热门用户
-                            </div>
-                            <div class="card-body ">
-                                <a th:each="user:${hotUsers}" th:href="${'/user/'+user.id}">
-                                    <img th:src="${user.avatar}" class="small-avatar inline-block"
-                                         th:alt="${user.username}"/>
+    <!--/*@thymesVar id="tags" type="java.util.List<com.mijack.sbbs.model.Tag>"*/-->
+    <div class="row">
+        <div class="col">
+            <div th:each="blog:${blogs}">
+                <div class="card">
+                    <div class="card-header bg-transparent ">
+                        <div class="inline-block">
+                            <h4 class="card-title">
+                                <a th:text="${blog.title}"
+                                   th:href="${'/user/'+blog.user.id+'/blog/'+blog.id}"></a>
+                                <span th:if="${blog.draft}" class="badge badge-secondary">草稿</span>
+                                <a th:href="${'/category/'+blog.category.id}" class="inline-block">
+                                    <span th:text="${blog.category.name}" class="badge badge-secondary"/>
                                 </a>
-                            </div>
+                            </h4>
+
+                        </div>
+                        <div>
+                            <a th:each="tag:${blog.tags}" th:href="${'/tag/'+tag.id}" class="inline-block">
+                                <span th:text="${tag.name}" class="badge badge-secondary"/>
+                            </a>
                         </div>
                     </div>
-                    <div>
-                        <div class="card ">
-                            <div class="card-header bg-transparent ">
-                                热门标签
-                            </div>
-                            <div class="card-body ">
-                                <a th:each="tag:${hotTags}" th:href="${'/tag/'+tag.id}" class="inline-block">
+                    <div class="card-body ">
+
+                        <p class="card-text" th:text="${blog.summary}">Some quick example text to build on the card
+                            title
+                            and make up the
+                            bulk of the card's content.</p>
+                    </div>
+
+                    <div class="card-footer bg-transparent ">
+                    <span class="float-right"
+                          th:text="'更新时间：'+${#dates.format(blog.updateTime, 'yyyy年MM月dd日 HH:mm')}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div>
+                <div class="card ">
+                    <div class="card-header bg-transparent">
+                        博客标签
+                    </div>
+                    <div class="card-body ">
+                        <div>
+                            <h6 th:each="tag:${tags}" class="inline-block">
+                                <a th:href="${'/tag/'+tag.id}">
                                     <span th:text="${tag.name}" class="badge badge-secondary"/>
                                 </a>
-                            </div>
+                            </h6>
                         </div>
                     </div>
                 </div>
             </div>
+
+
         </div>
 
     </div>
 
 </div>
-
+<header th:replace="fragments/component :: pagination"/>
 <header th:replace="fragments/nav :: footbar"/>
 
 

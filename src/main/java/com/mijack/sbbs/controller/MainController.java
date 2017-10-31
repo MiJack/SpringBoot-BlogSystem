@@ -5,6 +5,7 @@ import com.mijack.sbbs.controller.base.BaseController;
 import com.mijack.sbbs.model.Blog;
 import com.mijack.sbbs.model.Tag;
 import com.mijack.sbbs.model.User;
+import com.mijack.sbbs.service.CategoryService;
 import com.mijack.sbbs.service.MainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class MainController extends BaseController {
     @Autowired
     MainService mainService;
+    @Autowired
+    CategoryService categoryService;
 
     @GetMapping({"/", "/index.html"})
     public ModelAndView index(@RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
@@ -53,6 +56,7 @@ public class MainController extends BaseController {
         modelAndView.addObject("hotTags", hotTagPage.getContent());
         // 主页的博客
         modelAndView.addObject("blogs", blogPage.getContent());
+        modelAndView.addObject("categories", categoryService.listCategory());
         // 分页数据
         modelAndView.addObject("pagination", pagination);
         return modelAndView;
