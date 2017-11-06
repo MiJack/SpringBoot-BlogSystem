@@ -38,6 +38,15 @@ body > .container {
     height: 40px;
 }
 
+.normal-avatar {
+    width: 80px;
+    height: 80px;
+}
+.big-avatar {
+    width: 200px;
+    height: 200px;
+}
+
 .inline-block {
     display: inline-block;
 }

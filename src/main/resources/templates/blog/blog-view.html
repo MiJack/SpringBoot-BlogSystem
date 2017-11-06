@@ -4,12 +4,10 @@
 <head>
     <meta charset="UTF-8"/>
     <title>博客系统</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
           integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
           crossorigin="anonymous"></link>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
             integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
             crossorigin="anonymous"></script>
@@ -17,7 +15,22 @@
             integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../static/css/blog.css" th:href="@{/css/blog.css}">
+    <!-- editor.md -->
+    <link rel="stylesheet" href="../../static/css/editormd.css" th:href="@{/css/editormd.css}"/>
     </link>
+    <script src="../../static/js/editormd.min.js" th:src="@{/js/editormd.js}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
+    <script src="../../static/js/require/marked.min.js" th:src="@{/js/require/marked.min.js}"></script>
+    <script src="../../static/js/require/prettify.min.js" th:src="@{/js/require/prettify.min.js}"></script>
+    <script src="../../static/js/require/raphael.min.js" th:src="@{/js/require/raphael.min.js}"></script>
+    <script src="../../static/js/require/underscore.min.js" th:src="@{/js/require/underscore.min.js}"></script>
+    <script src="../../static/js/require/sequence-diagram.min.js"
+            th:src="@{/js/require/sequence-diagram.min.js}"></script>
+    <script src="../../static/js/require/flowchart.min.js" th:src="@{/js/require/flowchart.min.js}"></script>
+    <script src="../../static/js/require/jquery.flowchart.min.js"
+            th:src="@{/js/require/jquery.flowchart.min.js}"></script>
+
     <style type="text/css">
         .no-item-icon-list {
             list-style: none;
@@ -107,17 +120,87 @@
 </header>
 
 <!--*/-->
+<script type="text/javascript">
+    var testEditor;
+
+    $(function () {
+        var url = $("#blog-editormd").attr("data");
+        $.ajax({
+            url: url,
+            type: "get",
+            success: function (data) {
+                // 处理成功回调
+                testEditor = editormd.markdownToHTML("blog-editormd", {
+                    markdown: data,
+                    htmlDecode: "style,script,iframe",  // you can filter tags decode
+                    emoji: true,
+                    taskList: true,
+                    tex: true,  // 默认不解析
+                    flowChart: true,  // 默认不解析
+                    sequenceDiagram: true,  // 默认不解析
+                });
+            },
+            error: function (a, b, c) {
+                alert("请求失败：" + a + "\n" + b + "\n" + c);
+            }
+        });
+    });
+
+
+</script>
 <!-- Begin page content -->
 <div class="container">
-    <div class="row">
+    <!---->
 
-        非编辑时 Markdown 转 HTML 的显示处理
-        Markdown to HTML for preview
-        <!--/*@thymesVar id="blog" type="com.mijack.sbbs.model.Blog"*/-->
-        <span th:text="${blog.toString()}"></span>
+    <!--/*@thymesVar id="blog" type="com.mijack.sbbs.model.Blog"*/-->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-transparent ">
+                    <div>
+                        <div class="pull-right">
+                            <a th:href="${'/user/'+blog.user.id}">
+                                <img th:src="${blog.user.avatar}"
+                                     class="normal-avatar" th:alt-title="${blog.user.username}"
+                                     th:alt="${blog.user.username}"/>
+                            </a></div>
+                        <div>
+                            <h2 id="blog-title" th:text="${blog.title}"/>
+                            <h2 class="inline-block">
+                                <a th:href="${'/category/'+blog.category.id}">
+                                    <span th:text="${blog.category.name}" class="badge badge-secondary"/>
+                                </a>
+                            </h2>
+
+                        </div>
+                        <div>
+                            <h6 th:each="tag:${blog.tags}" class="inline-block">
+                                <a th:href="${'/tag/'+tag.id}">
+                                    <span th:text="${tag.name}" class="badge badge-secondary"/>
+                                </a>
+                            </h6>
+                        </div>
+                        <div>
+                            <span th:text="'创建时间：'+${#dates.format(blog.createTime, 'yyyy年MM月dd日 HH:mm')}"></span>
+                            <br/>
+                            <span th:text="'更新时间：'+${#dates.format(blog.updateTime, 'yyyy年MM月dd日 HH:mm')}"></span>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="card-body">
+
+
+                    <div id="blog-editormd" th:data="${blog.contentUrl}">
+                        <textarea style="display:none;"></textarea>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<header th:replace="fragments/component :: pagination"/>
 
 <header th:replace="fragments/nav :: footbar"/>
 

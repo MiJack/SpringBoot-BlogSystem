@@ -49,6 +49,7 @@ public class FileResourcesController {
             InputStreamResource inputStreamResource = new InputStreamResource(rawFile.getInputStream());
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "filename=" + storageObject.getOriginFileName());
+            headers.add(HttpHeaders.CONTENT_TYPE, storageObject.getMediaType().getContentType());
             HttpStatus statusCode = HttpStatus.OK;
             ResponseEntity<InputStreamResource> entity = new ResponseEntity<>(inputStreamResource, headers, statusCode);
             return entity;

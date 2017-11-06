@@ -104,6 +104,7 @@
         <div th:each="blog:${blogs}">
             <div class="card ">
                 <div class="card-header bg-transparent ">
+
                     <div class="inline-block">
                         <h4 class="card-title">
                             <a th:text="${blog.title}"
@@ -115,22 +116,27 @@
                         </h4>
 
                     </div>
-                    <div >
+                    <div class="float-right">
+                        <button th:if="${blog.isDraft()}" class="btn">发布</button>
+                        <button class="btn">删除</button>
+                    </div>
+                    <div>
                         <a th:each="tag:${blog.tags}" th:href="${'/tag/'+tag.id}" class="inline-block">
                             <span th:text="${tag.name}" class="badge badge-secondary"/>
                         </a>
                     </div>
+
                 </div>
                 <div class="card-body ">
 
-                    <p class="card-text" th:text="${blog.summary}">Some quick example text to build on the card title and make up the
+                    <p class="card-text" th:text="${blog.summary}">Some quick example text to build on the card title
+                        and make up the
                         bulk of the card's content.</p>
                 </div>
 
                 <div class="card-footer bg-transparent ">
-                    <button class="btn">删除</button>
-                    <span class="float-right"
-                          th:text="'更新时间：'+${#dates.format(blog.updateTime, 'yyyy年MM月dd日 HH:mm')}"></span>
+                  <span class="float-right"
+                        th:text="'更新时间：'+${#dates.format(blog.updateTime, 'yyyy年MM月dd日 HH:mm')}"></span>
                 </div>
             </div>
         </div>

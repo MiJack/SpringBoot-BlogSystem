@@ -69,6 +69,6 @@ public class Pagination {
     }
 
     public String getPageUrl(int i) {
-        return baseUrl.replace("{currentPage}", String.valueOf(i));
+        return baseUrl.replace("{pageIndex}", String.valueOf(i));
     }
 }
