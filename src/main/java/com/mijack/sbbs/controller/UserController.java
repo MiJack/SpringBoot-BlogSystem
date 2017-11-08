@@ -2,7 +2,9 @@ package com.mijack.sbbs.controller;
 
 import com.mijack.sbbs.controller.base.BaseController;
 import com.mijack.sbbs.exceptions.UserNotFoundException;
+import com.mijack.sbbs.model.BlogStatistics;
 import com.mijack.sbbs.model.User;
+import com.mijack.sbbs.service.BlogStatisticsService;
 import com.mijack.sbbs.service.UserService;
 import com.mijack.sbbs.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ public class UserController extends BaseController {
     UserService userService;
     @Autowired
     TokenBasedRememberMeServices tokenBasedRememberMeServices;
+    @Autowired
+    BlogStatisticsService blogStatisticsService;
 
     @GetMapping("/user.html")
     public String user(Authentication authentication, Model model) {
@@ -49,6 +53,9 @@ public class UserController extends BaseController {
         }
         model.addAttribute("user", user);
         model.addAttribute("modifyShow", false);
+        // 添加blog统计情况
+        BlogStatistics blogStatistics = blogStatisticsService.blogStatistics(user);
+        model.addAttribute("blogStatistics", blogStatistics);
         return "user/profile";
     }
 

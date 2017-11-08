@@ -100,6 +100,7 @@
 <!-- Begin page content -->
 <div class="container">
     <!--/*@thymesVar id="user" type="com.mijack.sbbs.model.User"*/-->
+    <!--/*@thymesVar id="blogStatistics" type="com.mijack.sbbs.model.BlogStatistics"*/-->
     <!--/*@thymesVar id="modifyShow" type="boolean"*/-->
 
     <!--<span th:text="${uploader.toString()}"></span>-->
@@ -117,6 +118,19 @@
                 <div class="row">
                     <div class="col-3">邮箱</div>
                     <div class="col-9" th:text="${user.email}"/>
+
+                </div>
+                <div class="row">
+                    <div class="col-3">博客</div>
+                    <div class="col-9">共<span th:text="${blogStatistics.blogCount}"/>篇</div>
+                </div>
+                <div class="row">
+                    <div class="col-3">分类</div>
+                    <div class="col-9">共<span th:text="${blogStatistics.categoryStatistics.size()}"/>种</div>
+                </div>
+                <div class="row">
+                    <div class="col-3">标签</div>
+                    <div class="col-9">共<span th:text="${blogStatistics.tagStatistics.size()}"/>种</div>
                 </div>
                 <div class="row" th:if="${modifyShow!=null and modifyShow}">
                     <button type="button" class="btn btn-primary">修改头像</button>
