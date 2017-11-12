@@ -101,10 +101,6 @@
 <!-- Begin page content -->
 <div class="container">
     <!--/*@thymesVar id="blogs" type="java.util.List<com.mijack.sbbs.model.Blog>"*/-->
-    <!--/*@thymesVar id="hotBlogs" type="java.util.List<com.mijack.sbbs.model.Blog>"*/-->
-    <!--/*@thymesVar id="hotUsers" type="java.util.List<com.mijack.sbbs.model.User>"*/-->
-    <!--/*@thymesVar id="hotTags" type="java.util.List<com.mijack.sbbs.model.Tag>"*/-->
-    <!--/*@thymesVar id="categories" type="java.util.List<com.mijack.sbbs.model.Category>"*/-->
     <div>
         <div class="container">
             <div class="row">
@@ -136,62 +132,6 @@
                         </div>
                     </div>
                     <header th:replace="fragments/component :: pagination"/>
-                </div>
-                <div class="col-3">
-                    <div>
-                        <div class="card ">
-                            <div class="card-header bg-transparent">
-                                博客分类
-                            </div>
-                            <div class="card-body ">
-                                <div>
-                                    <h6 th:each="category:${categories}" class="inline-block">
-                                        <a th:href="${'/category/'+category.id}">
-                                            <span th:text="${category.name}" class="badge badge-secondary"/>
-                                        </a>
-                                    </h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="card ">
-                            <div class="card-header bg-transparent">
-                                热门博客
-                            </div>
-                            <div class="card-body ">
-                                <div th:each="blog:${hotBlogs}">
-                                    <a th:text="${blog.title}" th:href="${'/user/'+blog.user.id+'/blog/'+blog.id}"></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-
-                        <div class="card ">
-                            <div class="card-header bg-transparent ">
-                                热门用户
-                            </div>
-                            <div class="card-body ">
-                                <a th:each="user:${hotUsers}" th:href="${'/user/'+user.id}">
-                                    <img th:src="${user.avatar}" class="small-avatar inline-block"
-                                         th:alt="${user.username}"/>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="card ">
-                            <div class="card-header bg-transparent ">
-                                热门标签
-                            </div>
-                            <div class="card-body ">
-                                <a th:each="tag:${hotTags}" th:href="${'/tag/'+tag.id}" class="inline-block">
-                                    <span th:text="${tag.name}" class="badge badge-secondary"/>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

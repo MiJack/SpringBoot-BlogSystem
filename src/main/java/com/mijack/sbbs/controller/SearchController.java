@@ -31,7 +31,7 @@ public class SearchController {
     @GetMapping({"/search.html"})
     public String search(@RequestParam(value = "order", required = false, defaultValue = "new") String order,
                          @RequestParam(value = "q", required = false) String keyword,
-                         @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,
+                         @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
                          @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
                          Model model) {
         if (Utils.isEmpty(keyword)) {
@@ -40,11 +40,11 @@ public class SearchController {
         Page<Blog> page = null;
         if (order.equals("hot")) { // 最热查询
             Sort sort = new Sort(Sort.Direction.DESC, "readSize", "commentSize", "voteSize", "createTime");
-            Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
+            Pageable pageable = new PageRequest(pageIndex-1, pageSize, sort);
             page = esBlogService.listHotestEsBlogs(keyword, pageable);
         } else if (order.equals("new")) { // 最新查询
             Sort sort = new Sort(Sort.Direction.DESC, "createTime");
-            Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
+            Pageable pageable = new PageRequest(pageIndex-1, pageSize, sort);
             page = esBlogService.listNewestEsBlogs(keyword, pageable);
         }
 
@@ -55,8 +55,8 @@ public class SearchController {
 
         Pagination pagination = new Pagination(
                 pageSize == DEFAULT_BLOG_SIZE_PRE_PAGE ?
-                        "index.html?pageIndex={pageIndex}" :
-                        ("index.html?pageIndex={pageIndex}&pageSize=" + pageSize)
+                        "search.html?q=" + keyword + "&pageIndex={pageIndex}" :
+                        ("search.html?q=" + keyword + "&pageIndex={pageIndex}&pageSize=" + pageSize)
                 , firstPage//首页页码
                 , endPage//末页页码
                 , pageIndex//当前页页码
@@ -65,7 +65,7 @@ public class SearchController {
         );
         model.addAttribute("pagination", pagination);
         model.addAttribute("keyword", keyword);
-        model.addAttribute("blogList", list);
+        model.addAttribute("blogs", list);
         return "search-result";
     }
 }

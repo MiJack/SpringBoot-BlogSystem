@@ -22,15 +22,6 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"/>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
     <script src="../../static/js/js.cookie.js" th:src="@{/js/js.cookie.js}"></script>
-    <style type="text/css">
-        .no-item-icon-list {
-            list-style: none;
-        }
-
-        .inline-block {
-            display: inline-block;
-        }
-    </style>
 </head>
 <body>
 <header th:replace="fragments/nav :: navbar"/>
@@ -186,7 +177,8 @@
             data: blogData,
             headers: {
                 token: Cookies.get("token")
-            }, success: function (data) {
+            },
+            success: function (data) {
                 if (data['code'] == 200) {
                     toastr.info(data['msg']);
                     $("#blog-id").val(data['data']['id']);

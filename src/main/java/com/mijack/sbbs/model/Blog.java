@@ -41,10 +41,10 @@ public class Blog {
     @UpdateTimestamp
     private Timestamp updateTime;
 
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.DETACH)
     @JoinTable(name = "blog_tag",
             joinColumns = @JoinColumn(name = "blogId", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tagId", referencedColumnName = "id"))
@@ -57,7 +57,7 @@ public class Blog {
     public Blog() {
     }
 
-    public Blog(String title, Category category, String contentUrl, User user,String summary) {
+    public Blog(String title, Category category, String contentUrl, User user, String summary) {
         this.title = title;
         this.category = category;
         this.contentUrl = contentUrl;

@@ -50,3 +50,6 @@ body > .container {
 .inline-block {
     display: inline-block;
 }
+.no-item-icon-list {
+    list-style: none;
+}

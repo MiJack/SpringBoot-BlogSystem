@@ -15,7 +15,6 @@ import okio.ByteString;
 import okio.Okio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -81,13 +80,16 @@ public class BlogServiceImpl implements BlogService {
             blog.setSummary(summary);
             blog = blogRepository.save(blog);
         }
-        ESBlog esBlog = new ESBlog(blog.getId(),
-                blog.getTitle(),
-                blogContent,
-                Utils.isEmpty(summary) ? Utils.markdownSummary(blogContent) : summary,
-                blog.getUser(),
-                blog.getCategory(), blog.getTags(), blog.getCreateTime(), blog.getUpdateTime());
-        esBlogRepository.save(esBlog);
+        if (!blog.isDraft()) {
+            // 草稿不需要保存到elastic search数据库
+            ESBlog esBlog = new ESBlog(blog.getId(),
+                    blog.getTitle(),
+                    blogContent,
+                    Utils.isEmpty(summary) ? Utils.markdownSummary(blogContent) : summary,
+                    blog.getUser(),
+                    blog.getCategory(), blog.getTags(), blog.getCreateTime(), blog.getUpdateTime());
+            esBlogRepository.save(esBlog);
+        }
         return blog;
     }
 

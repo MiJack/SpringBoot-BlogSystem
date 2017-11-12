@@ -5,7 +5,6 @@ import com.mijack.sbbs.model.Category;
 import com.mijack.sbbs.model.Tag;
 import com.mijack.sbbs.model.User;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Set;
