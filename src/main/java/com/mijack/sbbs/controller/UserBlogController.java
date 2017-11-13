@@ -6,9 +6,11 @@ import com.mijack.sbbs.exceptions.BlogNotFoundException;
 import com.mijack.sbbs.exceptions.UserNotFoundException;
 import com.mijack.sbbs.model.Blog;
 import com.mijack.sbbs.model.Category;
+import com.mijack.sbbs.model.Comment;
 import com.mijack.sbbs.model.User;
 import com.mijack.sbbs.service.BlogService;
 import com.mijack.sbbs.service.CategoryService;
+import com.mijack.sbbs.service.CommentService;
 import com.mijack.sbbs.service.UserService;
 import com.mijack.sbbs.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,8 @@ public class UserBlogController extends BaseController {
     CategoryService categoryService;
     @Autowired
     UserService userService;
+    @Autowired
+    CommentService commentService;
 
     @GetMapping("/user/blogs.html")
     public String userBlog(@RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
@@ -117,7 +121,9 @@ public class UserBlogController extends BaseController {
         if (blog == null || !Utils.isEquals(user, blog.getUser())) {
             throw new BlogNotFoundException("博客未找到");
         }
+        Page<Comment> comments = commentService.listBlogComment(blog,new PageRequest(0,10,new Sort(new Sort.Order(Sort.Direction.ASC,"commentNumber"))) );
         model.addAttribute("blog", blog);
+        model.addAttribute("blogComments", comments.getContent());
         return "blog/blog-view";
     }
 }

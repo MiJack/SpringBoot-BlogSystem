@@ -15,7 +15,8 @@ public class Comment {
     @Id // 主键
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 自增长策略
     private Long id;
-
+    private int commentNumber;
+    private boolean isDelete = false;
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "user")
     private User user;
@@ -70,6 +71,22 @@ public class Comment {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public int getCommentNumber() {
+        return commentNumber;
+    }
+
+    public void setCommentNumber(int commentNumber) {
+        this.commentNumber = commentNumber;
+    }
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
     }
 
     public Timestamp getCreateTime() {

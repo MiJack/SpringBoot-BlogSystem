@@ -30,6 +30,7 @@
     <script src="../../static/js/require/flowchart.min.js" th:src="@{/js/require/flowchart.min.js}"></script>
     <script src="../../static/js/require/jquery.flowchart.min.js"
             th:src="@{/js/require/jquery.flowchart.min.js}"></script>
+    <script src="../../static/js/js.cookie.js" th:src="@{/js/js.cookie.js}"></script>
 
     <style type="text/css">
         .no-item-icon-list {
@@ -153,6 +154,7 @@
     <!---->
 
     <!--/*@thymesVar id="blog" type="com.mijack.sbbs.model.Blog"*/-->
+    <!--/*@thymesVar id="blogComments" type="java.util.List<com.mijack.sbbs.model.Comment>"*/-->
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -190,10 +192,40 @@
 
                 </div>
                 <div class="card-body">
-
-
                     <div id="blog-editormd" th:data="${blog.contentUrl}">
                         <textarea style="display:none;"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header bg-transparent ">评论区
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-primary" onclick="showModel()">评论</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="blog-comment-list">
+                        <div th:if="${blogComments!=null and blogComments.size()>0}">
+                            <!-- 添加分页功能-->
+                            <div th:each="comment:${blogComments}">
+                                <div class="inline-block">
+                                    <a th:href="${'/user/'+blog.user.id}">
+                                        <img th:src="${blog.user.avatar}"
+                                             class="small-avatar" th:alt-title="${blog.user.username}"
+                                             th:alt="${blog.user.username}"/>
+                                    </a>
+                                </div>
+                                <div class="inline-block">
+                                    <span th:text="${comment.user.username}"/><br/>
+                                    <span th:text="'#'+${comment.commentNumber}"/> <span
+                                        th:text="${#dates.format(comment.createTime, 'yyyy年MM月dd日 HH:mm')}"/><br/>
+                                    <div th:text="${comment.comment}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${blogComments==null || blogComments.size()==0}">
+                            暂无评论
+                        </div>
                     </div>
 
                 </div>
@@ -201,9 +233,40 @@
         </div>
     </div>
 </div>
-
+<script>
+    function showModel() {
+        // 创建是否已经登陆
+        var token = Cookies.get("token");
+        if (token != undefined) {
+            //已经登陆
+        } else {
+            // 未登录
+            window.location.href = "/login.html"
+        }
+    };
+</script>
 <header th:replace="fragments/nav :: footbar"/>
-
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
