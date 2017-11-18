@@ -42,6 +42,7 @@ body > .container {
     width: 80px;
     height: 80px;
 }
+
 .big-avatar {
     width: 200px;
     height: 200px;
@@ -50,6 +51,14 @@ body > .container {
 .inline-block {
     display: inline-block;
 }
+
 .no-item-icon-list {
     list-style: none;
+}
+
+a {
+    text-decoration: none
+}
+a:hover {
+    text-decoration: none
 }

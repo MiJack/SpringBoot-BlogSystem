@@ -2,7 +2,7 @@
 <html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"></meta>
+    <meta charset="UTF-8"/>
     <title>博客系统</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
           integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
@@ -101,8 +101,10 @@
 <!-- Begin page content -->
 <div class="container">
     <!--/*@thymesVar id="blogs" type="java.util.List<com.mijack.sbbs.model.Blog>"*/-->
+    <!--/*@thymesVar id="keyword" type="java.lang.String"*/-->
     <div>
         <div class="container">
+            <h2  th:text="${keyword}+'的搜索结果' "></h2>
             <div class="row">
                 <div class="col">
                     <div th:each="blog:${blogs}">

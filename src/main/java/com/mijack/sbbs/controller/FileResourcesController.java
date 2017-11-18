@@ -21,6 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URLEncoder;
 
+import static com.mijack.sbbs.service.StorageService.resourceCriteria;
+import static com.mijack.sbbs.service.StorageService.resourcePathCriteria;
+
 /**
  * @author Mr.Yuan
  * @since 2017/10/18
@@ -39,8 +42,8 @@ public class FileResourcesController {
         StorageObject storageObject = storageService.findStorageObject(
                 new Query(
                         new Criteria().orOperator(
-                                Criteria.where("resourcePath").is(requestURI),
-                                Criteria.where("type").is(type).and("uuid").is(uuid).and("extensionName").is(extensionName)
+                                resourcePathCriteria(requestURI),
+                                resourceCriteria(type, uuid, extensionName)
                         )
                 )
         );
@@ -67,8 +70,8 @@ public class FileResourcesController {
         StorageObject storageObject = storageService.findStorageObject(
                 new Query(
                         new Criteria().orOperator(
-                                Criteria.where("resourcePath").is(requestURI),
-                                Criteria.where("type").is(type).and("uuid").is(uuid).and("extensionName").is(extensionName)
+                                resourcePathCriteria(requestURI),
+                                resourceCriteria(type, uuid, extensionName)
                         )
                 )
         );

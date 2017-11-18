@@ -11,8 +11,6 @@ import com.mijack.sbbs.utils.Utils;
 import com.mijack.sbbs.vo.FileType;
 import com.mijack.sbbs.vo.MediaType;
 import com.mongodb.gridfs.GridFSDBFile;
-import okio.ByteString;
-import okio.Okio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +19,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
@@ -93,20 +90,14 @@ public class BlogServiceImpl implements BlogService {
         return blog;
     }
 
+    @Override
     public String getBlogContent(Blog blog) {
         StorageObject storageObject = getBlogStorageObject(blog);
         if (storageObject == null || !(storageObject.getRawFile() instanceof GridFSDBFile)) {
             return null;
         }
         GridFSDBFile rawFile = (GridFSDBFile) storageObject.getRawFile();
-        try {
-            ByteString byteString = Okio.buffer(
-                    Okio.source(rawFile.getInputStream())).readByteString();
-            return byteString.utf8();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return Utils.string(rawFile.getInputStream());
 
     }
 

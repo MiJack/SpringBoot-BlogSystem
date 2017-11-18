@@ -9,6 +9,9 @@ import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.Set;
 
+/**
+ * @author Mr.Yuan
+ */
 @Entity
 public class Blog {
 
@@ -33,9 +36,7 @@ public class Blog {
     private String contentUrl;
 
     @Column(name = "create_time", nullable = false)
-//    @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-//    @Generated(GenerationTime.INSERT)
     private Timestamp createTime;
     @Column(name = "update_time", nullable = false)
     @UpdateTimestamp
@@ -44,7 +45,7 @@ public class Blog {
     @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToMany(cascade = CascadeType.DETACH)
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinTable(name = "blog_tag",
             joinColumns = @JoinColumn(name = "blogId", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tagId", referencedColumnName = "id"))

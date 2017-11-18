@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
+import static com.mijack.sbbs.service.StorageService.resourcePathCriteria;
 /**
  * @author Mr.Yuan
  * @since 2017/10/12
@@ -80,5 +80,4 @@ public class StorageServiceImpl implements StorageService {
                 .stream().map(gridFSDBFile -> create(gridFSDBFile))
                 .collect(Collectors.toList());
     }
-
 }

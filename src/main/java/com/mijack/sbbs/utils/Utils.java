@@ -1,6 +1,8 @@
 package com.mijack.sbbs.utils;
 
 import com.youbenzi.mdtool.tool.MDTool;
+import okio.ByteString;
+import okio.Okio;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.security.core.Authentication;
@@ -113,5 +115,16 @@ public class Utils {
             return text;
         }
         return text.substring(0, 200);
+    }
+
+    public static String string(InputStream inputStream) {
+        try {
+            ByteString byteString = Okio.buffer(
+                    Okio.source(inputStream)).readByteString();
+            return byteString.utf8();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

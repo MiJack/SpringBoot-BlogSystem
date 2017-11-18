@@ -125,35 +125,75 @@
     var testEditor;
 
     $(function () {
-        var url = $("#blog-editormd").attr("data");
-        $.ajax({
-            url: url,
-            type: "get",
-            success: function (data) {
-                // 处理成功回调
-                testEditor = editormd.markdownToHTML("blog-editormd", {
-                    markdown: data,
-                    htmlDecode: "style,script,iframe",  // you can filter tags decode
-                    emoji: true,
-                    taskList: true,
-                    tex: true,  // 默认不解析
-                    flowChart: true,  // 默认不解析
-                    sequenceDiagram: true,  // 默认不解析
-                });
-            },
-            error: function (a, b, c) {
-                alert("请求失败：" + a + "\n" + b + "\n" + c);
+//        var url = $("#blog-editormd").attr("data");
+//        $.ajax({
+//            url: url,
+//            type: "get",
+//            success: function (data) {
+        // 处理成功回调
+        testEditor = editormd.markdownToHTML("blog-editormd", {
+//                    markdown: data,
+            htmlDecode: "style,script,iframe",  // you can filter tags decode
+            emoji: true,
+            taskList: true,
+            tex: true,  // 默认不解析
+            flowChart: true,  // 默认不解析
+            sequenceDiagram: true,  // 默认不解析
+        });
+//            },
+//            error: function (a, b, c) {
+//                alert("请求失败：" + a + "\n" + b + "\n" + c);
+//            }
+//        });
+        $("#blogCommentButton").click(function (event) {
+            var comment = $("#blogCommentInput").val();
+            if (comment == null || comment.length == 0) {
+                toastr.info("评论为空");
+                return;
             }
+            var blogId = /^.*\/user\/(\d+)\/blog\/(\d+)$/.exec(window.location.href)[2];
+            var url = "/api/blog/" + blogId + "/comments";
+            $.ajax({
+                url: url,
+                type: "post",
+                data: {
+                    'comment': comment
+                },
+                headers: {
+                    token: Cookies.get("token")
+                }, success: function (data) {
+                    if (data['code'] = 200) {
+                        toastr.info("评论成功");
+                        window.location.reload();
+                    } else {
+                        toastr.info("评论失败");
+                    }
+                },
+                error: function (a, b, c) {
+                    alert("请求失败：" + a + "\n" + b + "\n" + c);
+                }
+            });
         });
     });
 
-
+    function showModel() {
+        // 创建是否已经登陆
+        var token = Cookies.get("token");
+        if (token != undefined) {
+            //已经登陆
+            $('#blogCommentModel').modal('show')
+        } else {
+            // 未登录
+            window.location.href = "/login.html"
+        }
+    };
 </script>
 <!-- Begin page content -->
 <div class="container">
     <!---->
 
     <!--/*@thymesVar id="blog" type="com.mijack.sbbs.model.Blog"*/-->
+    <!--/*@thymesVar id="blogContent" type="java.lang.String"*/-->
     <!--/*@thymesVar id="blogComments" type="java.util.List<com.mijack.sbbs.model.Comment>"*/-->
     <div class="row">
         <div class="col-12">
@@ -192,9 +232,11 @@
 
                 </div>
                 <div class="card-body">
-                    <div id="blog-editormd" th:data="${blog.contentUrl}">
-                        <textarea style="display:none;"></textarea>
-                    </div>
+                    <div id="blog-editormd">
+                        <textarea style="display:none;" th:text="${blogContent}"/></div>
+                    <!--<div id="blog-editormd" th:data="${blog.contentUrl}">
+                    <textarea style="display:none;"></textarea>
+                </div>-->
                 </div>
             </div>
             <div class="card">
@@ -233,36 +275,27 @@
         </div>
     </div>
 </div>
-<script>
-    function showModel() {
-        // 创建是否已经登陆
-        var token = Cookies.get("token");
-        if (token != undefined) {
-            //已经登陆
-        } else {
-            // 未登录
-            window.location.href = "/login.html"
-        }
-    };
-</script>
 <header th:replace="fragments/nav :: footbar"/>
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="blogCommentModel" tabindex="-1" role="dialog" aria-labelledby="blogCommentLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="blogCommentLabel">评论</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                ...
+                <div class="form-group">
+                    <label for="blogCommentInput">评论</label>
+                    <input type="text" class="form-control" id="blogCommentInput" placeholder="评论内容"/>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" id="blogCommentButton" class="btn btn-primary">评论</button>
             </div>
         </div>
     </div>

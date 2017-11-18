@@ -2,7 +2,7 @@
 <html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8"></meta>
     <title>博客系统</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
@@ -22,6 +22,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"/>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
     <script src="../../static/js/js.cookie.js" th:src="@{/js/js.cookie.js}"></script>
+
 </head>
 <body>
 <header th:replace="fragments/nav :: navbar"/>
@@ -32,8 +33,8 @@
 <header data-th-fragment="navbar">
     <script>
         function logout() {
-            $("#logoutForm").submit()
-        }
+            $("#logoutForm").submit();
+        };
 
         $(document).ready(function () {
             $(".blog-nav-item").each(function () {
@@ -61,7 +62,7 @@
                 <div class="navbar-nav">
                     <a class="nav-item nav-link blog-nav-item" data-location="['/','/index.html']"
                        href="/index.html">首页</a>
-                    <a class="nav-item nav-link blog-nav-item" data-location="['/owner/blogs.html']"
+                    <a class="nav-item nav-link blog-nav-item" data-location="['/user/blogs.html']"
                        sec:authorize="hasAnyRole('USER') and !hasAnyRole('ADMIN')"
                        th:href="@{/owner/blogs.html}">我的博客</a>
                     <a class="nav-item nav-link blog-nav-item" data-location="[]"
@@ -102,128 +103,63 @@
 </header>
 
 <!--*/-->
-<script>
-    $(document).ready(function () {
-        $("#btnDeleteBlog").click(function (event) {
-             var blogId = $("#blogId").text();
+<!-- Begin page content -->
+<!--/*@thymesVar id="blogs" type="java.util.List<com.mijack.sbbs.model.Blog>"*/-->
+<!--/*@thymesVar id="hotBlogs" type="java.util.List<com.mijack.sbbs.model.Blog>"*/-->
+<!--/*@thymesVar id="hotUsers" type="java.util.List<com.mijack.sbbs.model.User>"*/-->
+<!--/*@thymesVar id="hotTags" type="java.util.List<com.mijack.sbbs.model.Tag>"*/-->
+<!--/*@thymesVar id="categories" type="java.util.List<com.mijack.sbbs.model.Category>"*/-->
+<div class="container">
+    <script>
+        function deleteAllBlog() {
             $.ajax({
-                url: "/api/blog/" + blogId,
-                type: "DELETE",
+                url: "/api/blog",
+                type: 'DELETE',
                 headers: {
                     token: Cookies.get("token")
                 },
                 success: function (data) {
-                    if (data['code'] == 200) {
-                        toastr.info(data['msg']);
-                        $(".blog-item[data-blog-id=" + blogId + "]").remove();
-                        $('#blog-delete-modal').modal('hide');
-                    } else {
-                        toastr.info("删除失败");
-                    }
-                }, fail: function (data) {
-                    if (data['msg'] != null) {
-                        toastr.info(data['msg']);
-                    } else {
-                        toastr.info("删除失败");
-                    }
+                },
+                error: function (data) {
                 }
             });
-        });
-        $(".btn-blog-delete")
-            .click(function (event) {
-                var btnDeleteBlog = $(event.target);
-                // 获取id
-                console.log(btnDeleteBlog);
-                var blogId = $(btnDeleteBlog).data('blog-id');
-                var blogItem = btnDeleteBlog.closest(".blog-item");
-                // 获取title
-                var blogTitle = blogItem.find(".blog-title").text();
-                console.log(blogTitle);
-                var blogSummary = blogItem.find(".blog-summary").text();
-                console.log(blogSummary);
-                $("#blogId").text(blogId);
-                $("#blogTitle").text(blogTitle);
-                $("#blogSummary").text(blogSummary);
-                $('#blog-delete-modal').modal('show');
-            });
-    });
-</script>
-<!-- Begin page content -->
-<div class="container">
-    <div>
-        <!--/*@thymesVar id="blogs" type="java.util.List<com.mijack.sbbs.model.Blog>"*/-->
-        <div class="card blog-item" th:each="blog:${blogs}" th:attr="data-blog-id=${blog.id}">
+        };
+    </script>
+    <button type="button" class="btn btn-danger" onclick="deleteAllBlog()">删除所有博客</button>
+
+    <div th:each="blog:${blogs}">
+        <div class="card ">
             <div class="card-header bg-transparent ">
+                <img th:src="${blog.user.avatar}" class="small-avatar" th:alt="${blog.user.username}"/>
                 <div class="inline-block">
                     <h4 class="card-title">
-                        <a th:text="${blog.title}" class="blog-title"
-                           th:href="${'/user/'+blog.user.id+'/blog/'+blog.id}"/>
-                        <span th:if="${blog.draft}" class="badge badge-secondary">草稿</span>
-                        <a th:href="${'/category/'+blog.category.id}" class="inline-block">
-                            <span th:text="${blog.category.name}" class="badge badge-secondary"/>
-                        </a>
+                        <a th:text="${blog.title}"
+                           th:href="${'/user/'+blog.user.id+'/blog/'+blog.id}"></a>
                     </h4>
 
                 </div>
                 <div class="float-right">
-                    <button th:if="${blog.isDraft()}" class="btn">发布</button>
-                    <button class="btn btn-danger btn-blog-delete" th:attr="data-blog-id=${blog.id}">删除</button>
-                </div>
-                <div>
                     <a th:each="tag:${blog.tags}" th:href="${'/tag/'+tag.id}" class="inline-block">
                         <span th:text="${tag.name}" class="badge badge-secondary"/>
                     </a>
                 </div>
-
             </div>
             <div class="card-body ">
 
-                <p class="card-text blog-summary" th:text="${blog.summary}">Some quick example text to build on the
-                    card title
-                    and make up the
+                <p class="card-text">Some quick example text to build on the card title and make up the
                     bulk of the card's content.</p>
             </div>
-
             <div class="card-footer bg-transparent ">
-                  <span class="float-right"
-                        th:text="'更新时间：'+${#dates.format(blog.updateTime, 'yyyy年MM月dd日 HH:mm')}"></span>
+                                <span class="float-right"
+                                      th:text="'更新时间：'+${#dates.format(blog.updateTime, 'yyyy年MM月dd日 HH:mm')}"></span>
             </div>
         </div>
-
     </div>
-
+    <header th:replace="fragments/component :: pagination"/>
 </div>
-<header th:replace="fragments/component :: pagination"/>
+
 <header th:replace="fragments/nav :: footbar"/>
-<!-- Modal -->
-<div class="modal fade" id="blog-delete-modal" tabindex="-1" role="dialog" aria-labelledby="deleteBlogModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div><h5 class="modal-title" id="deleteBlogModalLabel">删除博客</h5>
-                    <div id="blogTitle"/>
-                    <div id="blogId" hidden="hidden"/>
-                </div>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group row">
-                    <h5 class="col-sm-12">
-                        <label for="blogSummary" class="col-form-label">摘要</label>
-                    </h5>
-                    <div id="blogSummary" class="col-sm-12"/>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button id="btnDeleteBlog" type="button" class="btn btn-danger">删除</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 </body>
 </html>
