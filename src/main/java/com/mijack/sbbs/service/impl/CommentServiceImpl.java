@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Mr.Yuan
@@ -30,7 +31,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public Comment comment(Comment comment) {
+        comment.setCommentNumber(commentRepository.countByBlog(comment.getBlog()) + 1);
         return commentRepository.save(comment);
     }
 

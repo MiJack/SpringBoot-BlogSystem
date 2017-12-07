@@ -42,11 +42,16 @@ public class MainController extends BaseController {
                 pageSize == DEFAULT_BLOG_SIZE_PRE_PAGE ?
                         "index.html?pageIndex={pageIndex}" :
                         ("index.html?pageIndex={pageIndex}&pageSize=" + pageSize)
-                , firstPage//首页页码
-                , endPage//末页页码
-                , pageIndex//当前页页码
-                , blogPage.isFirst()//是否为首页
-                , blogPage.isLast()//是否为末页
+                //首页页码
+                , firstPage
+                //末页页码
+                , endPage
+                //当前页页码
+                , pageIndex
+                //是否为首页
+                , blogPage.isFirst()
+                //是否为末页
+                , blogPage.isLast()
         );
         // 最热博客
         modelAndView.addObject("hotBlogs", hotBlogPage.getContent());

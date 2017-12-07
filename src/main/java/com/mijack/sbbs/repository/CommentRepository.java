@@ -18,4 +18,6 @@ public interface CommentRepository extends PagingAndSortingRepository<Comment, L
 
 
     Page<Comment> findAllByBlog(Blog blog, Pageable pageable);
+
+    int countByBlog(Blog blog);
 }

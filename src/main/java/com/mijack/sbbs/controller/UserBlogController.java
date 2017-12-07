@@ -3,6 +3,7 @@ package com.mijack.sbbs.controller;
 import com.mijack.sbbs.component.Pagination;
 import com.mijack.sbbs.controller.base.BaseController;
 import com.mijack.sbbs.exceptions.BlogNotFoundException;
+import com.mijack.sbbs.exceptions.IllegalOperationException;
 import com.mijack.sbbs.exceptions.UserNotFoundException;
 import com.mijack.sbbs.model.Blog;
 import com.mijack.sbbs.model.Category;
@@ -105,6 +106,25 @@ public class UserBlogController extends BaseController {
         }
         List<Category> categories = categoryService.listCategory();
         model.addAttribute("categories", categories);
+        return "blog/blog-write";
+    }
+
+    @GetMapping("/user/edit/blog/{blogId}")
+    public String editBlog(@PathVariable("blogId") long blogId,
+                           Authentication authentication, Model model) {
+        if (!Utils.isAuthenticated(authentication)) {
+            return "redirect:/login.html";
+        }
+        Blog blog = blogService.findBlog(blogId);
+        User user = (User) authentication.getPrincipal();
+        if (!user.equals(blog.getUser())) {
+            throw new IllegalOperationException("你无权修改博客");
+        }
+        model.addAttribute("blog", blog);
+        List<Category> categories = categoryService.listCategory();
+        model.addAttribute("categories", categories);
+        String blogContent = blogService.getBlogContent(blog);
+        model.addAttribute("blogContent", blogContent);
         return "blog/blog-write";
     }
 
