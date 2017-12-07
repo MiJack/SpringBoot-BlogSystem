@@ -6,6 +6,7 @@ import com.mijack.sbbs.auth.provider.FormAuthenticationProvider;
 import com.mijack.sbbs.auth.provider.RestfulApiAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 
 import java.util.HashMap;
@@ -32,6 +35,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     LoginAuthenticationSuccessHandler loginAuthenticationSuccessHandler;
     @Autowired
     UserDetailsService userDetailsService;
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @Bean
     TokenBasedRememberMeServices tokenBasedRememberMeServices(UserDetailsService userDetailsService) {
@@ -60,6 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .rememberMe()//.key("remember-me")
                 .rememberMeParameter("remember-me")
+                .tokenRepository(tokenRepository())
                 .and()
                 .logout()
                 .logoutUrl("/logout")
@@ -68,6 +74,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //api接口不做csrf处理
         http.csrf().ignoringAntMatchers("/api/**");
         http.addFilterBefore(restfulApiAuthenticationProcessingFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
+    }
+
+    public PersistentTokenRepository tokenRepository() {
+        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+        jdbcTokenRepository.setJdbcTemplate(jdbcTemplate);
+        jdbcTemplate.execute("CREATE TABLE IF  NOT EXISTS persistent_logins (" +
+                "  username VARCHAR ( 64 ) NOT NULL," +
+                "  series VARCHAR ( 64 ) PRIMARY KEY," +
+                "  token VARCHAR ( 64 ) NOT NULL," +
+                "  last_used TIMESTAMP NOT NULL " +
+                "  )");
+        return jdbcTokenRepository;
     }
 
     @Override

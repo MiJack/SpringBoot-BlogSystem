@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * @author Mr.Yuan
+ */
 public class RestfulApiAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
     public RestfulApiAuthenticationProcessingFilter() {
         super(new AntPathRequestMatcher("/api/**"));

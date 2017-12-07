@@ -3,7 +3,10 @@ buildscript {
         springBootVersion = '1.5.7.RELEASE'
     }
     repositories {
-        mavenCentral()
+		maven {
+			url 'http://maven.aliyun.com/nexus/content/groups/public/'
+		}
+		mavenCentral()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -19,10 +22,10 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
-    mavenCentral()
     maven {
         url 'http://maven.aliyun.com/nexus/content/groups/public/'
     }
+    mavenCentral()
 }
 
 dependencies {
@@ -45,8 +48,8 @@ dependencies {
     compile('mysql:mysql-connector-java:6.0.5')
     //actuator
     compile('org.springframework.boot:spring-boot-starter-actuator')
-    compile('org.springframework.boot:spring-boot-actuator-docs')
-    compile('org.springframework.boot:spring-boot-devtools')
+//    compile('org.springframework.boot:spring-boot-actuator-docs')
+//    compile('org.springframework.boot:spring-boot-devtools')
     compile 'com.google.guava:guava:23.0'
     // https://mvnrepository.com/artifact/commons-io/commons-io
     compile group: 'commons-io', name: 'commons-io', version: '2.4'
