@@ -2,6 +2,9 @@ package com.mijack.sbbs.model;
 
 import javax.persistence.*;
 
+/**
+ * @author Mr.Yuan
+ */
 @Entity
 public class Category {
     @Id // 主键

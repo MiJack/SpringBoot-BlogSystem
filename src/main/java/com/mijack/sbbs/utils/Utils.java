@@ -19,6 +19,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.regex.Pattern;
 
+/**
+ *  @author Mr.Yuan
+ */
 public class Utils {
     public static final Pattern PATTERN = Pattern.compile("^[a-zA-z0-9]+@[a-zA-z0-9]+(\\.[a-zA-z0-9]+)+$");
 

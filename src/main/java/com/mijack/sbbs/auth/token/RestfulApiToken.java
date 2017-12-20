@@ -7,6 +7,9 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * @author Mr.Yuan
+ */
 public class RestfulApiToken extends AbstractAuthenticationToken {
     private String username;
     private String email;

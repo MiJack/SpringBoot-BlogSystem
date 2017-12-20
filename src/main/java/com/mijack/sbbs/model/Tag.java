@@ -6,6 +6,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
+/**
+ * @author Mr.Yuan
+ */
 @Entity
 public class Tag {
     @Id

@@ -117,7 +117,24 @@
             sequenceDiagram: true,
             saveHTMLToTextarea: true
         });
+        $("#btnDeleteBlogTag").click(function (event) {
+            var tagName = $("#blogTag").text();
+            $(".tag-item").each(function () {
+                if ($(this).text() == tagName) {
+                    $(this).remove();
+                }
+            });
+            $('#blog-tag-delete-modal').modal('hide');
 
+        });
+        $(".tag-item")
+            .click(function (event) {
+                var btnDeleteBlogTag = $(event.target);
+                var blogId = $(btnDeleteBlogTag).data('blog-id');
+                $("#blogId").text(blogId);
+                $("#blogTag").text(btnDeleteBlogTag.text());
+                $('#blog-tag-delete-modal').modal('show');
+            });
     });
 
     function isEmpty(str) {
@@ -125,7 +142,7 @@
     }
 
     function getTags() {
-        var result;
+        var result = "";
         $(".tag-item").each(function () {
             if (!isEmpty(result)) {
                 result += ",";
@@ -204,10 +221,20 @@
             }
         });
         return result;
-    }
+    };
+
+
+    // function removeThisTag() {
+    //     console.log("remove");
+    //
+    // };
 
     function addTag() {
         var tag = $("#tag-input").val();
+        if (isEmpty(tag)) {
+            toastr.info("标签为空");
+            return;
+        }
         if (isTagExist(tag)) {
             toastr.info("标签已存在");
             return;
@@ -215,7 +242,7 @@
         var tagElement = $("<span></span>").text(tag).addClass("badge").addClass("badge-secondary").addClass("tag-item");
         $("#blog-tag-list").append(tagElement);
         $("#tag-input").val("");
-    }
+    };
 </script>
 <!-- Begin page content -->
 <div class="container">
@@ -247,8 +274,13 @@
                         <div>
                             <h5>标签</h5>
                             <div class="no-item-icon-list tag-list" id="blog-tag-list">
-                                <span th:if="${blog!=null}" th:each="tag :${blog.tags}"
-                                      class="badge badge-secondary tag-item" th:text="${tag.name}">New</span>
+                                <th:block th:if="${blog!=null and blog.tags!=null}">
+                                    <h4 class="inline-block"
+                                        th:each="tag :${blog.tags}">
+                                    <span class="badge badge-secondary tag-item" th:text="${tag.name}"
+                                    >New</span>
+                                    </h4>
+                                </th:block>
                             </div>
                             <div>
                                 <input id="tag-input" class="form-control col-md-8 inline-block"
@@ -274,6 +306,37 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="blog-tag-delete-modal" tabindex="-1" role="dialog" aria-labelledby="deleteBlogTagModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div><h5 class="modal-title" id="deleteBlogTagModalLabel">移除博客标签</h5>
+                    <div id="blogTitle"/>
+                    <div id="blogId" hidden="hidden"/>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <h5 class="col-sm-12">
+                        <label for="blogTag" class="col-form-label">标签</label>
+                    </h5>
+                    <div id="blogTag" class="col-sm-12"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button id="btnDeleteBlogTag" type="button" class="btn btn-danger">删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <header th:replace="fragments/component :: pagination"/>
 
 <header th:replace="fragments/nav :: footbar"/>

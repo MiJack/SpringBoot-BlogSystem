@@ -7,6 +7,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.Date;
 
+/**
+ * @author Mr.Yuan
+ */
 @Entity
 public class Token {
     @Id

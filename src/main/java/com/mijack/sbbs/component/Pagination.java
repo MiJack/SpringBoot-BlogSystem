@@ -2,6 +2,8 @@ package com.mijack.sbbs.component;
 
 /**
  * 分页的组件对象
+ *
+ * @author Mr.Yuan
  */
 public class Pagination {
     private String baseUrl;

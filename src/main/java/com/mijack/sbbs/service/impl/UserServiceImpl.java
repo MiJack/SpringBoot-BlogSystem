@@ -10,6 +10,9 @@ import com.mijack.sbbs.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Mr.Yuan
+ */
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired

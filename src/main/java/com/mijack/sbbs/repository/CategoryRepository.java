@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Mr.Yuan
+ */
 @Repository
 public interface CategoryRepository extends PagingAndSortingRepository<Category, Long> {
 

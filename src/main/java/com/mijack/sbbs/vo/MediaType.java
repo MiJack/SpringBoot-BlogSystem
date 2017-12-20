@@ -4,7 +4,6 @@ package com.mijack.sbbs.vo;
  * @author Mr.Yuan
  * @since 2017/10/12
  */
-
 public enum MediaType {
     markdown("markdown", "text/markdown", ".md"),
     jpg("image", "images/jpg", ".jpg");

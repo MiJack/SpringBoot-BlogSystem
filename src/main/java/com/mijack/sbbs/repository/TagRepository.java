@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Mr.Yuan
+ */
 @Repository
 public interface TagRepository extends PagingAndSortingRepository<Tag, Long> {
     Tag findTagByName(String name);
