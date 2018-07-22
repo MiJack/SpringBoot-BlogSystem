@@ -83,7 +83,7 @@ public class BlogServiceImpl implements BlogService {
                     blog.getTitle(),
                     blogContent,
                     Utils.isEmpty(summary) ? Utils.markdownSummary(blogContent) : summary,
-                    blog.getUser(),
+                    blog.getUser().getId(),
                     blog.getCategory(), blog.getTags(), blog.getCreateTime(), blog.getUpdateTime());
             esBlogRepository.save(esBlog);
         }

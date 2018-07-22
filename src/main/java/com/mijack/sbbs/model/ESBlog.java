@@ -3,8 +3,10 @@ package com.mijack.sbbs.model;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldIndex;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.persistence.Id;
+
 import java.sql.Timestamp;
 import java.util.Set;
 
@@ -23,19 +25,19 @@ public class ESBlog {
     private String title;
     private String content;
     private String summary;
-    @Field(index = FieldIndex.not_analyzed)  // 不做全文检索字段
-    private User user;
+    @Field(index = FieldIndex.not_analyzed,type = FieldType.Long)  // 不做全文检索字段
+    private Long user;
     private Set<Tag> tags;  // 标签
     private Category category; // 分类
-    @Field(index = FieldIndex.not_analyzed)  // 不做全文检索字段
+    @Field(index = FieldIndex.not_analyzed,type = FieldType.Date)  // 不做全文检索字段
     private Timestamp createTime;
-    @Field(index = FieldIndex.not_analyzed)  // 不做全文检索字段
+    @Field(index = FieldIndex.not_analyzed,type = FieldType.Date)  // 不做全文检索字段
     private Timestamp updateTime;
 
     public ESBlog() {
     }
 
-    public ESBlog(Long id, String title, String content, String summary,User user, Category category, Set<Tag> tags, Timestamp createTime, Timestamp updateTime) {
+    public ESBlog(Long id, String title, String content, String summary, Long user, Category category, Set<Tag> tags, Timestamp createTime, Timestamp updateTime) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -71,11 +73,11 @@ public class ESBlog {
         this.content = content;
     }
 
-    public User getUser() {
+    public Long getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Long user) {
         this.user = user;
     }
 
