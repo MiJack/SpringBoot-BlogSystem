@@ -44,6 +44,6 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment findComment(long commentId) {
-        return commentRepository.findOne(commentId);
+        return commentRepository.findById(commentId).get();
     }
 }

@@ -25,9 +25,9 @@ public class EsBlogServiceImpl implements EsBlogService {
 
     @Override
     public Page<Blog> listHotestEsBlogs(String keyword, Pageable pageable) {
-        Sort sort = new Sort(Sort.Direction.DESC, "createTime");
+        Sort sort = Sort.by(Sort.Direction.DESC, "createTime");
         if (pageable.getSort() == null) {
-            pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
         }
         Page<ESBlog> pages = esBlogRepository.findDistinctByTitleContainingOrContentContainingOrCategoryContainingOrTagsContaining(keyword, keyword, keyword, keyword, pageable);
         return pages.map(source -> blogService.findBlog(source.getId()));
@@ -35,9 +35,9 @@ public class EsBlogServiceImpl implements EsBlogService {
 
     @Override
     public Page<Blog> listNewestEsBlogs(String keyword, Pageable pageable) {
-        Sort sort = new Sort(Sort.Direction.DESC, "createTime");
+        Sort sort = Sort.by(Sort.Direction.DESC, "createTime");
         if (pageable.getSort() == null) {
-            pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
         }
         Page<ESBlog> pages = esBlogRepository.findDistinctByTitleContainingOrContentContainingOrCategoryContainingOrTagsContaining(keyword, keyword, keyword, keyword, pageable);
         return pages.map(source -> blogService.findBlog(source.getId()));

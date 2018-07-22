@@ -3,11 +3,9 @@ package com.mijack.sbbs.service.impl;
 import com.mijack.sbbs.model.Token;
 import com.mijack.sbbs.model.User;
 import com.mijack.sbbs.repository.TokenRepository;
-import com.mijack.sbbs.repository.UserRepository;
 import com.mijack.sbbs.service.AuthService;
 import com.mijack.sbbs.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.encoding.BasePasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service

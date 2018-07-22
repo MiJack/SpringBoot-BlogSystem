@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUser(long userId) {
-        return userRepository.findOne(userId);
+        return userRepository.findById(userId).get();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         if (user == null || oldPassword == null || newPassword == null) {
             return user;
         }
-        User oldUser = userRepository.findOne(user.getId());
+        User oldUser = userRepository.findById(user.getId()).get();
         if (!oldUser.getPassword().equals(oldPassword)) {
             return user;
         }
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
         if (user == null || email == null) {
             return user;
         }
-        User oldUser = userRepository.findOne(user.getId());
+        User oldUser = userRepository.findById(user.getId()).get();
         oldUser.setEmail(email);
         return userRepository.save(oldUser);
     }

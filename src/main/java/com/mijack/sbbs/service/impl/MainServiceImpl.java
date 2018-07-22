@@ -31,28 +31,28 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public Page<Blog> listHotBlog(Pageable pageable) {
-        PageRequest hotValue = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(),
-                new Sort(new Sort.Order(Sort.Direction.DESC, "hotValue")));
+        PageRequest hotValue = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                Sort.by(new Sort.Order(Sort.Direction.DESC, "hotValue")));
         return blogRepository.findAllByDraft(false, hotValue);
     }
 
     @Override
     public Page<Blog> listNewBlog(Pageable pageable) {
-        PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(),
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
                 Sort.Direction.DESC, "updateTime", "createTime");
         return blogRepository.findAllByDraft(false, pageRequest);
     }
 
     @Override
     public Page<Tag> listHotTag(Pageable pageable) {
-        PageRequest hotValue = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(),
+        PageRequest hotValue = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
                 Sort.Direction.DESC, "hotValue");
         return tagRepository.findAll(hotValue);
     }
 
     @Override
     public Page<User> listHotUser(Pageable pageable) {
-        PageRequest hotValue = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(),
+        PageRequest hotValue = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
                 Sort.Direction.DESC, "hotValue");
         return userRepository.findAll(hotValue);
     }

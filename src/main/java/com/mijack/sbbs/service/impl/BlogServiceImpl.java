@@ -1,6 +1,7 @@
 package com.mijack.sbbs.service.impl;
 
 import com.google.common.collect.Sets;
+
 import com.mijack.sbbs.model.*;
 import com.mijack.sbbs.repository.BlogRepository;
 import com.mijack.sbbs.repository.EsBlogRepository;
@@ -10,7 +11,14 @@ import com.mijack.sbbs.utils.AssertUtils;
 import com.mijack.sbbs.utils.Utils;
 import com.mijack.sbbs.vo.FileType;
 import com.mijack.sbbs.vo.MediaType;
+import com.mongodb.client.gridfs.GridFSBucket;
+import com.mongodb.client.model.Filters;
 import com.mongodb.gridfs.GridFSDBFile;
+import okio.Buffer;
+import okio.ByteString;
+import okio.Okio;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +42,8 @@ public class BlogServiceImpl implements BlogService {
     StorageService storageService;
     @Autowired
     EsBlogRepository esBlogRepository;
+    @Autowired
+    GridFSBucket gridFSBucket;
 
     @Override
     public Page<Blog> listBlog(User user, Pageable pageable) {
@@ -56,13 +66,13 @@ public class BlogServiceImpl implements BlogService {
         // 移除MongoDB和elasticsearch
         blogRepository.delete(blog);
         storageService.removeStorageObject(blogQuery(blog));
-        esBlogRepository.delete(blog.getId());
+        esBlogRepository.deleteById(blog.getId());
         return true;
     }
 
     @Override
     public Blog findBlog(long blogId) {
-        return blogRepository.findOne(blogId);
+        return blogRepository.findById(blogId).get();
     }
 
     @Override
@@ -93,20 +103,22 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public String getBlogContent(Blog blog) {
         StorageObject storageObject = getBlogStorageObject(blog);
-        if (storageObject == null || !(storageObject.getRawFile() instanceof GridFSDBFile)) {
+        if (storageObject == null) {
             return null;
         }
-        GridFSDBFile rawFile = (GridFSDBFile) storageObject.getRawFile();
-        return Utils.string(rawFile.getInputStream());
-
+        ObjectId rawFile = storageObject.getRawFile();
+        try (Buffer buffer = new Buffer()) {
+            gridFSBucket.downloadToStream(rawFile, buffer.outputStream());
+            return Utils.string(buffer.inputStream());
+        }
     }
 
     private StorageObject getBlogStorageObject(Blog blog) {
         return storageService.findStorageObject(blogQuery(blog));
     }
 
-    private Query blogQuery(Blog blog) {
-        return new Query(Criteria.where("resourcePath").is(blog.getContentUrl()));
+    private Bson blogQuery(Blog blog) {
+        return StorageService.resourcePathFilters(blog.getContentUrl());
     }
 
     @Override
@@ -133,7 +145,7 @@ public class BlogServiceImpl implements BlogService {
         String blogName = blogTitle + MediaType.markdown.getExtensionName();
         StorageObject mongoGridFile = new StorageObject(
                 blog.getMongoFilePath(), blogName, FileType.blog, user, MediaType.markdown);
-        storageService.removeStorageObject(new Query(Criteria.where("_id").is(blog.getMongoFileId())));
+        storageService.removeStorageObject(Filters.eq("_id", blog.getMongoFileId()));
         mongoGridFile = storageService.saveStorageObject(mongoGridFile, Utils.inputStream(blogMarkdown));
         blog.setDraft(isDraft);
         blog.setSummary(Utils.markdownSummary(blogMarkdown));
@@ -148,7 +160,7 @@ public class BlogServiceImpl implements BlogService {
         blogRepository.findAll().forEach(blog -> {
             blogRepository.delete(blog);
             storageService.removeStorageObject(blogQuery(blog));
-            esBlogRepository.delete(blog.getId());
+            esBlogRepository.deleteById(blog.getId());
         });
     }
 }

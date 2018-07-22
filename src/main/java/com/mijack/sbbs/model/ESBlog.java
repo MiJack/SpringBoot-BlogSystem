@@ -2,7 +2,6 @@ package com.mijack.sbbs.model;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldIndex;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.persistence.Id;
@@ -20,18 +19,18 @@ import java.util.Set;
 public class ESBlog {
 
     @Id  // 主键
-    @Field(index = FieldIndex.not_analyzed)
+    @Field(index = false)
     private Long id; // Blog 实体的 id
     private String title;
     private String content;
     private String summary;
-    @Field(index = FieldIndex.not_analyzed,type = FieldType.Long)  // 不做全文检索字段
+    @Field(index = false)  // 不做全文检索字段
     private Long user;
     private Set<Tag> tags;  // 标签
     private Category category; // 分类
-    @Field(index = FieldIndex.not_analyzed,type = FieldType.Date)  // 不做全文检索字段
+    @Field(index = false, type = FieldType.Date)  // 不做全文检索字段
     private Timestamp createTime;
-    @Field(index = FieldIndex.not_analyzed,type = FieldType.Date)  // 不做全文检索字段
+    @Field(index = false, type = FieldType.Date)  // 不做全文检索字段
     private Timestamp updateTime;
 
     public ESBlog() {

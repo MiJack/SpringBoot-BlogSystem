@@ -1,6 +1,9 @@
 package com.mijack.sbbs.config;
 
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.gridfs.GridFSBucket;
+import com.mongodb.client.gridfs.GridFSBuckets;
 import com.mongodb.gridfs.GridFS;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,10 +16,9 @@ import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
  */
 @Configuration
 public class WebMongoConfiguration extends AbstractMongoConfiguration {
-
-    @Bean
-    public GridFS gridFS(MongoDbFactory dbFactory) {
-        return new GridFS(dbFactory.getDb());
+    @Override
+    public MongoClient mongoClient() {
+        return new MongoClient("localhost", 27017);
     }
 
     @Override
@@ -24,9 +26,14 @@ public class WebMongoConfiguration extends AbstractMongoConfiguration {
         return "test";
     }
 
-    @Override
-    public synchronized MongoClient mongo() throws Exception {
-        return new MongoClient("localhost", 27017);
+    @Bean
+    public MongoDatabase mongoDatabase(MongoDbFactory mongoDbFactory) {
+        return mongoDbFactory.getDb();
+    }
+
+    @Bean
+    public GridFSBucket gridFSBucket(MongoDatabase mongoDatabase) {
+        return GridFSBuckets.create(mongoDatabase, getDatabaseName());
     }
 
 }

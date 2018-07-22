@@ -39,12 +39,12 @@ public class SearchController {
         }
         Page<Blog> page = null;
         if (order.equals("hot")) { // 最热查询
-            Sort sort = new Sort(Sort.Direction.DESC, "readSize", "commentSize", "voteSize", "createTime");
-            Pageable pageable = new PageRequest(pageIndex-1, pageSize, sort);
+            Sort sort = Sort.by(Sort.Direction.DESC, "readSize", "commentSize", "voteSize", "createTime");
+            Pageable pageable = PageRequest.of(pageIndex-1, pageSize, sort);
             page = esBlogService.listHotestEsBlogs(keyword, pageable);
         } else if (order.equals("new")) { // 最新查询
-            Sort sort = new Sort(Sort.Direction.DESC, "createTime");
-            Pageable pageable = new PageRequest(pageIndex-1, pageSize, sort);
+            Sort sort = Sort.by(Sort.Direction.DESC, "createTime");
+            Pageable pageable = PageRequest.of(pageIndex-1, pageSize, sort);
             page = esBlogService.listNewestEsBlogs(keyword, pageable);
         }
 

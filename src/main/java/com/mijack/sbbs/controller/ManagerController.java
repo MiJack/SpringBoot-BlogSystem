@@ -25,7 +25,7 @@ public class ManagerController extends BaseController {
     public String manageBlog(@RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
                              @RequestParam(value = "pageSize", required = false, defaultValue = "" + DEFAULT_BLOG_SIZE_PRE_PAGE) int pageSize,
                              Model model) {
-        Page<Blog> blogPage = mainService.listNewBlog(new PageRequest(pageIndex - 1, pageSize));
+        Page<Blog> blogPage = mainService.listNewBlog(PageRequest.of(pageIndex - 1, pageSize));
         int firstPage = Math.max(1, pageIndex - DEFAULT_BLOG_PAGE_OFFSET);
         int endPage = Math.max(1, Math.min(blogPage.getTotalPages(), pageIndex + DEFAULT_BLOG_PAGE_OFFSET));
         Pagination pagination = new Pagination(

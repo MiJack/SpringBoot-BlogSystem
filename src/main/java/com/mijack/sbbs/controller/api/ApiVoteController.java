@@ -41,7 +41,7 @@ public class ApiVoteController extends BaseController {
         }
         RestfulApiToken token = (RestfulApiToken) authentication;
         User user = token.getUser();
-        Page<Vote> votePage = voteService.listUserVote(user, new PageRequest(pageIndex - 1, pageSize));
+        Page<Vote> votePage = voteService.listUserVote(user, PageRequest.of(pageIndex - 1, pageSize));
         int firstPage = Math.max(1, pageIndex - DEFAULT_BLOG_PAGE_OFFSET);
         int endPage = Math.max(1, Math.min(votePage.getTotalPages(), pageIndex + DEFAULT_BLOG_PAGE_OFFSET));
         return PageResponse
@@ -62,7 +62,7 @@ public class ApiVoteController extends BaseController {
         if (user == null) {
             return PageResponse.failed("用户不存在");
         }
-        Page<Vote> votePage = voteService.listUserVote(user, new PageRequest(pageIndex - 1, pageSize));
+        Page<Vote> votePage = voteService.listUserVote(user, PageRequest.of(pageIndex - 1, pageSize));
         int firstPage = Math.max(1, pageIndex - DEFAULT_BLOG_PAGE_OFFSET);
         int endPage = Math.max(1, Math.min(votePage.getTotalPages(), pageIndex + DEFAULT_BLOG_PAGE_OFFSET));
         return PageResponse
@@ -83,7 +83,7 @@ public class ApiVoteController extends BaseController {
         if (blog == null) {
             return PageResponse.failed("博客不存在");
         }
-        Page<Vote> votePage = voteService.listBlogVote(blog, new PageRequest(pageIndex - 1, pageSize));
+        Page<Vote> votePage = voteService.listBlogVote(blog, PageRequest.of(pageIndex - 1, pageSize));
         int firstPage = Math.max(1, pageIndex - DEFAULT_BLOG_PAGE_OFFSET);
         int endPage = Math.max(1, Math.min(votePage.getTotalPages(), pageIndex + DEFAULT_BLOG_PAGE_OFFSET));
         return PageResponse

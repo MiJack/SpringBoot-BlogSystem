@@ -32,10 +32,10 @@ public class MainController extends BaseController {
     public ModelAndView index(@RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
                               @RequestParam(value = "pageSize", required = false, defaultValue = "" + DEFAULT_BLOG_SIZE_PRE_PAGE) int pageSize) {
         ModelAndView modelAndView = new ModelAndView("index");
-        Page<Blog> hotBlogPage = mainService.listHotBlog(new PageRequest(0, DEFAULT_HOT_BLOG_SIZE));
-        Page<User> hotUserPage = mainService.listHotUser(new PageRequest(0, DEFAULT_HOT_USER_SIZE));
-        Page<Tag> hotTagPage = mainService.listHotTag(new PageRequest(0, DEFAULT_HOT_TAG_SIZE));
-        Page<Blog> blogPage = mainService.listNewBlog(new PageRequest(pageIndex - 1, pageSize));
+        Page<Blog> hotBlogPage = mainService.listHotBlog(PageRequest.of(0, DEFAULT_HOT_BLOG_SIZE));
+        Page<User> hotUserPage = mainService.listHotUser(PageRequest.of(0, DEFAULT_HOT_USER_SIZE));
+        Page<Tag> hotTagPage = mainService.listHotTag(PageRequest.of(0, DEFAULT_HOT_TAG_SIZE));
+        Page<Blog> blogPage = mainService.listNewBlog(PageRequest.of(pageIndex - 1, pageSize));
         int firstPage = Math.max(1, pageIndex - DEFAULT_BLOG_PAGE_OFFSET);
         int endPage = Math.max(1, Math.min(blogPage.getTotalPages(), pageIndex + DEFAULT_BLOG_PAGE_OFFSET));
         Pagination pagination = new Pagination(

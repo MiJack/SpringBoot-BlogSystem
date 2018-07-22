@@ -43,7 +43,7 @@ public class BlogController extends BaseController {
         if (tag == null) {
             throw new TagNotFoundException();
         }
-        Page<Blog> blogPage = blogService.listBlog(tag, new PageRequest(pageIndex - 1, pageSize));
+        Page<Blog> blogPage = blogService.listBlog(tag, PageRequest.of(pageIndex - 1, pageSize));
         int firstPage = Math.max(1, pageIndex - DEFAULT_BLOG_PAGE_OFFSET);
         int endPage = Math.max(1, Math.min(blogPage.getTotalPages(), pageIndex + DEFAULT_BLOG_PAGE_OFFSET));
         Pagination pagination = new Pagination(
@@ -58,7 +58,7 @@ public class BlogController extends BaseController {
         );
         // 主页的博客
         model.addAttribute("blogs", blogPage.getContent());
-        model.addAttribute("tags", tagService.listTag(new PageRequest(0, 12, Sort.Direction.DESC, "hotValue")).getContent());
+        model.addAttribute("tags", tagService.listTag(PageRequest.of(0, 12, Sort.Direction.DESC, "hotValue")).getContent());
         // 分页数据
         model.addAttribute("pagination", pagination);
         return "blog/blog-tag-list";
@@ -74,7 +74,7 @@ public class BlogController extends BaseController {
         if (category == null) {
             throw new CategoryNotFoundException();
         }
-        Page<Blog> blogPage = blogService.listBlog(category, new PageRequest(pageIndex - 1, pageSize));
+        Page<Blog> blogPage = blogService.listBlog(category, PageRequest.of(pageIndex - 1, pageSize));
         int firstPage = Math.max(1, pageIndex - DEFAULT_BLOG_PAGE_OFFSET);
         int endPage = Math.max(1, Math.min(blogPage.getTotalPages(), pageIndex + DEFAULT_BLOG_PAGE_OFFSET));
         Pagination pagination = new Pagination(

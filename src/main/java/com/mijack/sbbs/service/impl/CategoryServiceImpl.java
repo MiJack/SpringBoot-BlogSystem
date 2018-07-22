@@ -21,11 +21,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category findCategory(long category) {
-        return categoryRepository.findOne(category);
+        return categoryRepository.findById(category).get();
     }
 
     @Override
     public List<Category> listCategory() {
-        return Lists.newArrayList(categoryRepository.findAll(new Sort(Sort.Direction.ASC, "id")));
+        return Lists.newArrayList(categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "id")));
     }
 }

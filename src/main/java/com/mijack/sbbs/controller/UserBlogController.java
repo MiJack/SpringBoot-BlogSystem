@@ -50,7 +50,7 @@ public class UserBlogController extends BaseController {
             return "redirect:/login.html";
         }
         User user = (User) authentication.getPrincipal();
-        PageRequest pageRequest = new PageRequest(pageIndex - 1, pageSize,
+        PageRequest pageRequest = PageRequest.of(pageIndex - 1, pageSize,
                 Sort.Direction.DESC, "updateTime", "createTime");
         Page<Blog> blogPage = blogService.listBlog(user, pageRequest);
         int firstPage = Math.max(1, pageIndex - DEFAULT_BLOG_PAGE_OFFSET);
@@ -77,7 +77,7 @@ public class UserBlogController extends BaseController {
                            @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
                            @RequestParam(value = "pageSize", required = false, defaultValue = "" + DEFAULT_BLOG_SIZE_PRE_PAGE) int pageSize,
                            Model model) {
-        PageRequest pageRequest = new PageRequest(pageIndex - 1, pageSize,
+        PageRequest pageRequest = PageRequest.of(pageIndex - 1, pageSize,
                 Sort.Direction.DESC, "updateTime", "createTime");
         User user = userService.findUser(userId);
         Page<Blog> blogPage = blogService.listBlog(user, pageRequest);
@@ -140,8 +140,8 @@ public class UserBlogController extends BaseController {
         if (blog == null || !Utils.isEquals(user, blog.getUser())) {
             throw new BlogNotFoundException("博客未找到");
         }
-        Page<Comment> comments = commentService.listBlogComment(blog, new PageRequest(0, 10,
-                new Sort(new Sort.Order(Sort.Direction.ASC, "commentNumber"))));
+        Page<Comment> comments = commentService.listBlogComment(blog, PageRequest.of(0, 10,
+                Sort.by(new Sort.Order(Sort.Direction.ASC, "commentNumber"))));
         model.addAttribute("blog", blog);
         model.addAttribute("blogContent", blogService.getBlogContent(blog));
         model.addAttribute("blogComments", comments.getContent());

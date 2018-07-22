@@ -1,28 +1,26 @@
 package com.mijack.sbbs.controller;
 
+import static com.mijack.sbbs.service.StorageService.*;
+
 import com.mijack.sbbs.model.StorageObject;
 import com.mijack.sbbs.service.StorageService;
 import com.mijack.sbbs.utils.Utils;
-import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.client.gridfs.GridFSBucket;
+import com.mongodb.client.model.Filters;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.CriteriaDefinition;
-import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.net.URLEncoder;
+import javax.servlet.http.HttpServletResponse;
 
-import static com.mijack.sbbs.service.StorageService.resourceCriteria;
-import static com.mijack.sbbs.service.StorageService.resourcePathCriteria;
+import java.io.IOException;
 
 /**
  * @author Mr.Yuan
@@ -32,62 +30,61 @@ import static com.mijack.sbbs.service.StorageService.resourcePathCriteria;
 public class FileResourcesController {
     @Autowired
     StorageService storageService;
+    @Autowired
+    GridFSBucket gridFSBucket;
 
     @GetMapping("/resource/{type}/{uuid}.{extensionName}")
-    public ResponseEntity<InputStreamResource> fileView(@PathVariable("type") String type,
-                                                        @PathVariable("uuid") String uuid,
-                                                        @PathVariable("extensionName") String extensionName,
-                                                        HttpServletRequest httpRequest) throws IOException {
-        String requestURI = httpRequest.getRequestURI();
+    public void fileView(@PathVariable("type") String type,
+                         @PathVariable("uuid") String uuid,
+                         @PathVariable("extensionName") String extensionName,
+                         HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ServletOutputStream outputStream = response.getOutputStream();
+        String requestURI = request.getRequestURI();
         StorageObject storageObject = storageService.findStorageObject(
-                new Query(
-                        new Criteria().orOperator(
-                                resourcePathCriteria(requestURI),
-                                resourceCriteria(type, uuid, extensionName)
-                        )
-                )
+                Filters.or(resourcePathFilters(requestURI), resourceFilters(type, uuid, extensionName))
         );
         if (storageObject != null) {
-            GridFSDBFile rawFile = (GridFSDBFile) storageObject.getRawFile();
-            InputStreamResource inputStreamResource = new InputStreamResource(rawFile.getInputStream());
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "filename=" + storageObject.getOriginFileName());
-            headers.add(HttpHeaders.CONTENT_TYPE, storageObject.getMediaType().getContentType());
-            HttpStatus statusCode = HttpStatus.OK;
-            ResponseEntity<InputStreamResource> entity = new ResponseEntity<>(inputStreamResource, headers, statusCode);
-            return entity;
+            ObjectId rawFile = storageObject.getRawFile();
+            response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "filename=" + storageObject.getOriginFileName());
+            response.addHeader(HttpHeaders.CONTENT_TYPE, storageObject.getMediaType().getContentType());
+            response.setStatus(HttpServletResponse.SC_OK);
+            gridFSBucket.downloadToStream(rawFile, outputStream);
         } else {
-            return new ResponseEntity("File was not fount", HttpStatus.NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            outputStream.write("File was not fount".getBytes());
         }
+        outputStream.flush();
+        outputStream.close();
     }
 
     @GetMapping("/repo/resource/{type}/{uuid}.{extensionName}")
-    public ResponseEntity<InputStreamResource> fileDownload(@PathVariable("type") String type,
-                                                            @PathVariable("uuid") String uuid,
-                                                            @PathVariable("extensionName") String extensionName,
-                                                            HttpServletRequest httpRequest) throws IOException {
-        String requestURI = httpRequest.getRequestURI();
-        StorageObject storageObject = storageService.findStorageObject(
-                new Query(
-                        new Criteria().orOperator(
-                                resourcePathCriteria(requestURI),
-                                resourceCriteria(type, uuid, extensionName)
-                        )
-                )
-        );
-        if (storageObject != null) {
-            GridFSDBFile rawFile = (GridFSDBFile) storageObject.getRawFile();
-            InputStreamResource inputStreamResource = new InputStreamResource(rawFile.getInputStream());
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentDispositionFormData("attachment", Utils.urlEncode(storageObject.getOriginFileName()));
-            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+    public void fileDownload(
+            @PathVariable("type") String type,
+            @PathVariable("uuid") String uuid,
+            @PathVariable("extensionName") String extensionName,
+            HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ServletOutputStream outputStream = response.getOutputStream();
 
-            HttpStatus statusCode = HttpStatus.OK;
-            ResponseEntity<InputStreamResource> entity = new ResponseEntity<>(inputStreamResource, headers, statusCode);
-            return entity;
+        String requestURI = request.getRequestURI();
+        StorageObject storageObject = storageService.findStorageObject(
+                Filters.or(resourcePathFilters(requestURI), resourceFilters(type, uuid, extensionName)));
+        if (storageObject != null) {
+            ObjectId rawFile = storageObject.getRawFile();
+            response.addHeader(HttpHeaders.CONTENT_DISPOSITION,
+                    ContentDisposition
+                            .builder("form-data")
+                            .name("attachment")
+                            .filename(Utils.urlEncode(storageObject.getOriginFileName()))
+                            .build().toString());
+            response.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM.toString());
+            response.setStatus(HttpServletResponse.SC_OK);
+            gridFSBucket.downloadToStream(rawFile, outputStream);
         } else {
-            return new ResponseEntity("File was not fount", HttpStatus.NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            outputStream.write("File was not fount".getBytes());
         }
+        outputStream.flush();
+        outputStream.close();
     }
 
 }

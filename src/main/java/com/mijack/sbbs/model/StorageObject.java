@@ -3,6 +3,7 @@ package com.mijack.sbbs.model;
 import com.mijack.sbbs.vo.FileType;
 import com.mijack.sbbs.vo.MediaType;
 import com.mongodb.gridfs.GridFSFile;
+import org.bson.types.ObjectId;
 
 /**
  * @author Mr.Yuan
@@ -15,7 +16,7 @@ public class StorageObject {
     private FileType fileType;
     private MediaType mediaType;
     private String storageId;
-    private GridFSFile rawFile;
+    private ObjectId rawFile;
 
     public StorageObject(String resourcePath, String originFileName, FileType fileType,User uploader, MediaType mediaType) {
         this.resourcePath = resourcePath;
@@ -57,11 +58,11 @@ public class StorageObject {
         this.mediaType = mediaType;
     }
 
-    public GridFSFile getRawFile() {
+    public ObjectId getRawFile() {
         return rawFile;
     }
 
-    public void setRawFile(GridFSFile rawFile) {
+    public void setRawFile(ObjectId rawFile) {
         this.rawFile = rawFile;
     }
 

@@ -37,7 +37,7 @@ public class VoteServiceImpl implements VoteService {
         if (vote == null) {
             throw new VoteExistException(String.format("用户%s未给id为%d的博客点赞", user.getUsername(), blog.getId()));
         }
-        voteRepository.delete(vote.getId());
+        voteRepository.deleteById(vote.getId());
         return vote;
     }
 

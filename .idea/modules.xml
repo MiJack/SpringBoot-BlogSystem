@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/SpringBoot-BlogSystem.iml" filepath="$PROJECT_DIR$/.idea/SpringBoot-BlogSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SpringBoot-BlogSystem_main.iml" filepath="$PROJECT_DIR$/.idea/modules/SpringBoot-BlogSystem_main.iml" group="SpringBoot-BlogSystem" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SpringBoot-BlogSystem_test.iml" filepath="$PROJECT_DIR$/.idea/modules/SpringBoot-BlogSystem_test.iml" group="SpringBoot-BlogSystem" />
+    </modules>
+  </component>
+</project>
